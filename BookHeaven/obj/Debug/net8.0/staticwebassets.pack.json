@@ -1,0 +1,49 @@
+{
+  "Files": [
+    {
+      "Id": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\11bf458e-e736-495d-844d-cb445b2690ce.jpg",
+      "PackagePath": "staticwebassets\\uploads\\11bf458e-e736-495d-844d-cb445b2690ce.jpg"
+    },
+    {
+      "Id": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\4967dda3-5056-408a-af58-4550e279c6bc.jpg",
+      "PackagePath": "staticwebassets\\uploads\\4967dda3-5056-408a-af58-4550e279c6bc.jpg"
+    },
+    {
+      "Id": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\8099e25e-793c-4911-a3d2-cd7d1ab2e8af.jpg",
+      "PackagePath": "staticwebassets\\uploads\\8099e25e-793c-4911-a3d2-cd7d1ab2e8af.jpg"
+    },
+    {
+      "Id": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\bb36df6f-8e91-4317-8877-634d90162387.jpg",
+      "PackagePath": "staticwebassets\\uploads\\bb36df6f-8e91-4317-8877-634d90162387.jpg"
+    },
+    {
+      "Id": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\cd806a13-95c1-40f6-9500-e5504ead10c8.png",
+      "PackagePath": "staticwebassets\\uploads\\cd806a13-95c1-40f6-9500-e5504ead10c8.png"
+    },
+    {
+      "Id": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\e6d9e83b-c6f1-4bb3-983c-5d74ea66c5cf.jpg",
+      "PackagePath": "staticwebassets\\uploads\\e6d9e83b-c6f1-4bb3-983c-5d74ea66c5cf.jpg"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.BookHeaven.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.BookHeaven.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.BookHeaven.props",
+      "PackagePath": "build\\BookHeaven.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.BookHeaven.props",
+      "PackagePath": "buildMultiTargeting\\BookHeaven.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.BookHeaven.props",
+      "PackagePath": "buildTransitive\\BookHeaven.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

@@ -1,0 +1,640 @@
+{
+  "Version": 1,
+  "Hash": "CaiaJ9bV9BPuDZYyfpBkj63S9bGsY8OBX+HJCFkpTtc=",
+  "Source": "BookHeaven",
+  "BasePath": "_content/BookHeaven",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "BookHeaven\\wwwroot",
+      "Source": "BookHeaven",
+      "ContentRoot": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\",
+      "BasePath": "_content/BookHeaven",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\11bf458e-e736-495d-844d-cb445b2690ce.jpg",
+      "SourceId": "BookHeaven",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\",
+      "BasePath": "_content/BookHeaven",
+      "RelativePath": "uploads/11bf458e-e736-495d-844d-cb445b2690ce#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "lembepdxud",
+      "Integrity": "LShV7o1B0pt3r18DttEG1MHWEvNwbrmJuwdJGfX72Mc=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\11bf458e-e736-495d-844d-cb445b2690ce.jpg"
+    },
+    {
+      "Identity": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\4967dda3-5056-408a-af58-4550e279c6bc.jpg",
+      "SourceId": "BookHeaven",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\",
+      "BasePath": "_content/BookHeaven",
+      "RelativePath": "uploads/4967dda3-5056-408a-af58-4550e279c6bc#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "iaemncia38",
+      "Integrity": "JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\4967dda3-5056-408a-af58-4550e279c6bc.jpg"
+    },
+    {
+      "Identity": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\8099e25e-793c-4911-a3d2-cd7d1ab2e8af.jpg",
+      "SourceId": "BookHeaven",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\",
+      "BasePath": "_content/BookHeaven",
+      "RelativePath": "uploads/8099e25e-793c-4911-a3d2-cd7d1ab2e8af#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "iaemncia38",
+      "Integrity": "JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\8099e25e-793c-4911-a3d2-cd7d1ab2e8af.jpg"
+    },
+    {
+      "Identity": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\bb36df6f-8e91-4317-8877-634d90162387.jpg",
+      "SourceId": "BookHeaven",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\",
+      "BasePath": "_content/BookHeaven",
+      "RelativePath": "uploads/bb36df6f-8e91-4317-8877-634d90162387#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "iaemncia38",
+      "Integrity": "JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\bb36df6f-8e91-4317-8877-634d90162387.jpg"
+    },
+    {
+      "Identity": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\cd806a13-95c1-40f6-9500-e5504ead10c8.png",
+      "SourceId": "BookHeaven",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\",
+      "BasePath": "_content/BookHeaven",
+      "RelativePath": "uploads/cd806a13-95c1-40f6-9500-e5504ead10c8#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "bf2j3il47g",
+      "Integrity": "+bGpE4JGv/j23qW3Nluv/m0iaC8cXVfbDuzTjx6Es24=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\cd806a13-95c1-40f6-9500-e5504ead10c8.png"
+    },
+    {
+      "Identity": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\e6d9e83b-c6f1-4bb3-983c-5d74ea66c5cf.jpg",
+      "SourceId": "BookHeaven",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\",
+      "BasePath": "_content/BookHeaven",
+      "RelativePath": "uploads/e6d9e83b-c6f1-4bb3-983c-5d74ea66c5cf#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "7j8evalr7i",
+      "Integrity": "Tea0jO4bzh6i4f5N1YWzUa2g7Hv6OBmY2CEQJa4h0Ao=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\e6d9e83b-c6f1-4bb3-983c-5d74ea66c5cf.jpg"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "uploads/11bf458e-e736-495d-844d-cb445b2690ce.jpg",
+      "AssetFile": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\11bf458e-e736-495d-844d-cb445b2690ce.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "107677"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"LShV7o1B0pt3r18DttEG1MHWEvNwbrmJuwdJGfX72Mc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 06 May 2025 21:03:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-LShV7o1B0pt3r18DttEG1MHWEvNwbrmJuwdJGfX72Mc="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/11bf458e-e736-495d-844d-cb445b2690ce.lembepdxud.jpg",
+      "AssetFile": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\11bf458e-e736-495d-844d-cb445b2690ce.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "107677"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"LShV7o1B0pt3r18DttEG1MHWEvNwbrmJuwdJGfX72Mc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 06 May 2025 21:03:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "lembepdxud"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/11bf458e-e736-495d-844d-cb445b2690ce.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-LShV7o1B0pt3r18DttEG1MHWEvNwbrmJuwdJGfX72Mc="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/4967dda3-5056-408a-af58-4550e279c6bc.iaemncia38.jpg",
+      "AssetFile": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\4967dda3-5056-408a-af58-4550e279c6bc.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5102"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 04 May 2025 22:46:10 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "iaemncia38"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/4967dda3-5056-408a-af58-4550e279c6bc.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/4967dda3-5056-408a-af58-4550e279c6bc.jpg",
+      "AssetFile": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\4967dda3-5056-408a-af58-4550e279c6bc.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5102"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 04 May 2025 22:46:10 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/8099e25e-793c-4911-a3d2-cd7d1ab2e8af.iaemncia38.jpg",
+      "AssetFile": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\8099e25e-793c-4911-a3d2-cd7d1ab2e8af.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5102"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 06 May 2025 20:59:22 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "iaemncia38"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/8099e25e-793c-4911-a3d2-cd7d1ab2e8af.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/8099e25e-793c-4911-a3d2-cd7d1ab2e8af.jpg",
+      "AssetFile": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\8099e25e-793c-4911-a3d2-cd7d1ab2e8af.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5102"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 06 May 2025 20:59:22 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/bb36df6f-8e91-4317-8877-634d90162387.iaemncia38.jpg",
+      "AssetFile": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\bb36df6f-8e91-4317-8877-634d90162387.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5102"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 06 May 2025 20:59:30 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "iaemncia38"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/bb36df6f-8e91-4317-8877-634d90162387.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/bb36df6f-8e91-4317-8877-634d90162387.jpg",
+      "AssetFile": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\bb36df6f-8e91-4317-8877-634d90162387.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5102"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 06 May 2025 20:59:30 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-JkcC/3uMqYL/wS+7LC03r6y0i1xokuQWZPiuhgboXTc="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/cd806a13-95c1-40f6-9500-e5504ead10c8.bf2j3il47g.png",
+      "AssetFile": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\cd806a13-95c1-40f6-9500-e5504ead10c8.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "129008"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"+bGpE4JGv/j23qW3Nluv/m0iaC8cXVfbDuzTjx6Es24=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 04 May 2025 22:56:16 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "bf2j3il47g"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/cd806a13-95c1-40f6-9500-e5504ead10c8.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-+bGpE4JGv/j23qW3Nluv/m0iaC8cXVfbDuzTjx6Es24="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/cd806a13-95c1-40f6-9500-e5504ead10c8.png",
+      "AssetFile": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\cd806a13-95c1-40f6-9500-e5504ead10c8.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "129008"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"+bGpE4JGv/j23qW3Nluv/m0iaC8cXVfbDuzTjx6Es24=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 04 May 2025 22:56:16 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-+bGpE4JGv/j23qW3Nluv/m0iaC8cXVfbDuzTjx6Es24="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/e6d9e83b-c6f1-4bb3-983c-5d74ea66c5cf.7j8evalr7i.jpg",
+      "AssetFile": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\e6d9e83b-c6f1-4bb3-983c-5d74ea66c5cf.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "482038"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Tea0jO4bzh6i4f5N1YWzUa2g7Hv6OBmY2CEQJa4h0Ao=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 04 May 2025 22:34:06 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "7j8evalr7i"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/e6d9e83b-c6f1-4bb3-983c-5d74ea66c5cf.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Tea0jO4bzh6i4f5N1YWzUa2g7Hv6OBmY2CEQJa4h0Ao="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/e6d9e83b-c6f1-4bb3-983c-5d74ea66c5cf.jpg",
+      "AssetFile": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\e6d9e83b-c6f1-4bb3-983c-5d74ea66c5cf.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "482038"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Tea0jO4bzh6i4f5N1YWzUa2g7Hv6OBmY2CEQJa4h0Ao=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 04 May 2025 22:34:06 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-Tea0jO4bzh6i4f5N1YWzUa2g7Hv6OBmY2CEQJa4h0Ao="
+        }
+      ]
+    }
+  ]
+}

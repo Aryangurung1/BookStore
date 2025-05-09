@@ -1,0 +1,300 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\Servlets\\BookHeaven\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\models\\book.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:models\\book.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\models\\member.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:models\\member.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\models\\bookmark.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:models\\bookmark.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\models\\broadcastmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:models\\broadcastmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\models\\processedorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:models\\processedorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\models\\admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:models\\admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\models\\announcement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:models\\announcement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\models\\cartitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:models\\cartitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\models\\orderitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:models\\orderitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\models\\review.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:models\\review.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\models\\staff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:models\\staff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\bookheaven.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:bookheaven.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|e:\\servlets\\bookheaven\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B422117-5DD3-4627-829D-95A919A545DF}|BookHeaven.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 16,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-05-04T19:13:08.147Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T19:09:39.154Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\AppDbContext.cs",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "Data\\AppDbContext.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAA/wBYAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T19:08:15.864Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "BookHeaven",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\BookHeaven.csproj",
+              "RelativeDocumentMoniker": "BookHeaven.csproj",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\BookHeaven.csproj",
+              "RelativeToolTip": "BookHeaven.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-05-04T19:07:18.896Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "BroadcastMessage.cs",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\Models\\BroadcastMessage.cs",
+              "RelativeDocumentMoniker": "Models\\BroadcastMessage.cs",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\Models\\BroadcastMessage.cs",
+              "RelativeToolTip": "Models\\BroadcastMessage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T19:05:46.771Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Announcement.cs",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\Models\\Announcement.cs",
+              "RelativeDocumentMoniker": "Models\\Announcement.cs",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\Models\\Announcement.cs",
+              "RelativeToolTip": "Models\\Announcement.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T19:05:03.997Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ProcessedOrder.cs",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\Models\\ProcessedOrder.cs",
+              "RelativeDocumentMoniker": "Models\\ProcessedOrder.cs",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\Models\\ProcessedOrder.cs",
+              "RelativeToolTip": "Models\\ProcessedOrder.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T19:04:36.589Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Staff.cs",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\Models\\Staff.cs",
+              "RelativeDocumentMoniker": "Models\\Staff.cs",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\Models\\Staff.cs",
+              "RelativeToolTip": "Models\\Staff.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T19:04:05.67Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Admin.cs",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\Models\\Admin.cs",
+              "RelativeDocumentMoniker": "Models\\Admin.cs",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\Models\\Admin.cs",
+              "RelativeToolTip": "Models\\Admin.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T19:03:48.748Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "CartItem.cs",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\Models\\CartItem.cs",
+              "RelativeDocumentMoniker": "Models\\CartItem.cs",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\Models\\CartItem.cs",
+              "RelativeToolTip": "Models\\CartItem.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T19:03:22.207Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Bookmark.cs",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\Models\\Bookmark.cs",
+              "RelativeDocumentMoniker": "Models\\Bookmark.cs",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\Models\\Bookmark.cs",
+              "RelativeToolTip": "Models\\Bookmark.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T19:02:37.497Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Review.cs",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\Models\\Review.cs",
+              "RelativeDocumentMoniker": "Models\\Review.cs",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\Models\\Review.cs",
+              "RelativeToolTip": "Models\\Review.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T19:02:07.79Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "OrderItem.cs",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\Models\\OrderItem.cs",
+              "RelativeDocumentMoniker": "Models\\OrderItem.cs",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\Models\\OrderItem.cs",
+              "RelativeToolTip": "Models\\OrderItem.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T19:01:48.016Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Order.cs",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\Models\\Order.cs",
+              "RelativeDocumentMoniker": "Models\\Order.cs",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\Models\\Order.cs",
+              "RelativeToolTip": "Models\\Order.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T19:01:24.803Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Book.cs",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\Models\\Book.cs",
+              "RelativeDocumentMoniker": "Models\\Book.cs",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\Models\\Book.cs",
+              "RelativeToolTip": "Models\\Book.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAA5wBEAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T19:00:48.37Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Member.cs",
+              "DocumentMoniker": "E:\\Servlets\\BookHeaven\\Models\\Member.cs",
+              "RelativeDocumentMoniker": "Models\\Member.cs",
+              "ToolTip": "E:\\Servlets\\BookHeaven\\Models\\Member.cs",
+              "RelativeToolTip": "Models\\Member.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-04T19:00:04.804Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
