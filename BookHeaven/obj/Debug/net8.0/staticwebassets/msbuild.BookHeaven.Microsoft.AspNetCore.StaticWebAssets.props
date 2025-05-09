@@ -126,6 +126,24 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\840e135c-cf6c-4b08-ab11-ba5cbfaeb678_onedriveerror.png'))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\8bfc7f93-c33f-42f9-8bbd-47131a73f96e_battery.jpeg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>BookHeaven</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/BookHeaven</BasePath>
+      <RelativePath>uploads/8bfc7f93-c33f-42f9-8bbd-47131a73f96e_battery.jpeg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>ndw4tbw8j7</Fingerprint>
+      <Integrity>FTrNFEi9gGL8+p1i6Skr7ukBKdl6auN+5z6NOk+7Eto=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\8bfc7f93-c33f-42f9-8bbd-47131a73f96e_battery.jpeg'))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\9dd6eb33-d20a-4eb5-90ee-f5209661d97e_onedriveerror.png'))">
       <SourceType>Package</SourceType>
       <SourceId>BookHeaven</SourceId>

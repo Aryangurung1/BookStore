@@ -1,21 +1,120 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookHeaven.Data;
 using BookHeaven.Models;
 using BookHeaven.DTOs.Announcement;
-using BookHeaven.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
-namespace BookHeaven.Services
+namespace BookHeaven.Controllers
 {
-    public class AnnouncementService : IAnnouncementService
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AnnouncementsController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public AnnouncementService(AppDbContext context)
+        public AnnouncementsController(AppDbContext context)
         {
             _context = context;
         }
 
-        public async Task<IEnumerable<AnnouncementDto>> GetAllAnnouncementsAsync()
+        // Admin: Create announcement
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create([FromBody] CreateAnnouncementDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (dto.EndTime <= dto.StartTime)
+            {
+                return BadRequest(new { message = "End time must be after start time" });
+            }
+
+            var announcement = new Announcement
+            {
+                Title = dto.Title,
+                Message = dto.Message,
+                StartTime = dto.StartTime,
+                EndTime = dto.EndTime,
+                Type = dto.Type,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Announcements.Add(announcement);
+            await _context.SaveChangesAsync();
+
+            return Ok(new AnnouncementDto
+            {
+                AnnouncementId = announcement.AnnouncementId,
+                Title = announcement.Title,
+                Message = announcement.Message,
+                StartTime = announcement.StartTime,
+                EndTime = announcement.EndTime,
+                Type = announcement.Type,
+                CreatedAt = announcement.CreatedAt
+            });
+        }
+
+        // Admin: Edit announcement
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int id, [FromBody] UpdateAnnouncementDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (dto.EndTime <= dto.StartTime)
+            {
+                return BadRequest(new { message = "End time must be after start time" });
+            }
+
+            var announcement = await _context.Announcements.FindAsync(id);
+            if (announcement == null)
+                return NotFound(new { message = "Announcement not found" });
+
+            announcement.Title = dto.Title;
+            announcement.Message = dto.Message;
+            announcement.StartTime = dto.StartTime;
+            announcement.EndTime = dto.EndTime;
+            announcement.Type = dto.Type;
+            announcement.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new AnnouncementDto
+            {
+                AnnouncementId = announcement.AnnouncementId,
+                Title = announcement.Title,
+                Message = announcement.Message,
+                StartTime = announcement.StartTime,
+                EndTime = announcement.EndTime,
+                Type = announcement.Type,
+                CreatedAt = announcement.CreatedAt,
+                UpdatedAt = announcement.UpdatedAt
+            });
+        }
+
+        // Admin: Delete announcement
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var announcement = await _context.Announcements.FindAsync(id);
+            if (announcement == null)
+                return NotFound(new { message = "Announcement not found" });
+
+            _context.Announcements.Remove(announcement);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Announcement deleted successfully" });
+        }
+
+        // Admin: List all announcements
+        [HttpGet("all")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAll()
         {
             var announcements = await _context.Announcements
                 .OrderByDescending(a => a.CreatedAt)
@@ -32,76 +131,13 @@ namespace BookHeaven.Services
                 })
                 .ToListAsync();
 
-            return announcements;
+            return Ok(announcements);
         }
 
-        public async Task<AnnouncementDto> CreateAnnouncementAsync(CreateAnnouncementDto dto)
-        {
-            var announcement = new Announcement
-            {
-                Title = dto.Title,
-                Message = dto.Message,
-                StartTime = dto.StartTime,
-                EndTime = dto.EndTime,
-                Type = dto.Type,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _context.Announcements.Add(announcement);
-            await _context.SaveChangesAsync();
-
-            return new AnnouncementDto
-            {
-                AnnouncementId = announcement.AnnouncementId,
-                Title = announcement.Title,
-                Message = announcement.Message,
-                StartTime = announcement.StartTime,
-                EndTime = announcement.EndTime,
-                Type = announcement.Type,
-                CreatedAt = announcement.CreatedAt
-            };
-        }
-
-        public async Task<AnnouncementDto> UpdateAnnouncementAsync(int id, UpdateAnnouncementDto dto)
-        {
-            var announcement = await _context.Announcements.FindAsync(id);
-            if (announcement == null)
-                return null;
-
-            announcement.Title = dto.Title;
-            announcement.Message = dto.Message;
-            announcement.StartTime = dto.StartTime;
-            announcement.EndTime = dto.EndTime;
-            announcement.Type = dto.Type;
-            announcement.UpdatedAt = DateTime.UtcNow;
-
-            await _context.SaveChangesAsync();
-
-            return new AnnouncementDto
-            {
-                AnnouncementId = announcement.AnnouncementId,
-                Title = announcement.Title,
-                Message = announcement.Message,
-                StartTime = announcement.StartTime,
-                EndTime = announcement.EndTime,
-                Type = announcement.Type,
-                CreatedAt = announcement.CreatedAt,
-                UpdatedAt = announcement.UpdatedAt
-            };
-        }
-
-        public async Task<bool> DeleteAnnouncementAsync(int id)
-        {
-            var announcement = await _context.Announcements.FindAsync(id);
-            if (announcement == null)
-                return false;
-
-            _context.Announcements.Remove(announcement);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<IEnumerable<AnnouncementDto>> GetActiveAnnouncementsAsync()
+        // Member: Get current announcements
+        [HttpGet("active")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetActive()
         {
             var now = DateTime.UtcNow;
             var announcements = await _context.Announcements
@@ -120,7 +156,7 @@ namespace BookHeaven.Services
                 })
                 .ToListAsync();
 
-            return announcements;
+            return Ok(announcements);
         }
     }
-}
+} 

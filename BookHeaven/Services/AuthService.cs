@@ -43,7 +43,7 @@ namespace BookHeaven.Services
             var staff = await _context.Staffs.FirstOrDefaultAsync(s => s.Email == dto.Email);
             if (staff != null && BCrypt.Net.BCrypt.Verify(dto.Password, staff.PasswordHash))
             {
-                var token = GenerateJwtToken(staff.Email, staff.FullName, "Staff");
+                var token = GenerateJwtToken(staff.Email, staff.FullName, "Staff", staff.StaffId);
                 return token;
             }
 
@@ -103,7 +103,7 @@ namespace BookHeaven.Services
             return "Registration successful";
         }
 
-        private string GenerateJwtToken(string email, string fullName, string role, int? memberId = null)
+        private string GenerateJwtToken(string email, string fullName, string role, int? memberOrStaffId = null)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
             var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"] ?? throw new InvalidOperationException("JWT Secret Key is not configured"));
@@ -117,9 +117,9 @@ namespace BookHeaven.Services
                 new Claim(ClaimTypes.Name, fullName),
                 new Claim(ClaimTypes.Role, role)
             };
-            if (role == "Member" && memberId.HasValue)
+            if ((role == "Member" || role == "Staff") && memberOrStaffId.HasValue)
             {
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, memberId.Value.ToString()));
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, memberOrStaffId.Value.ToString()));
             }
             var tokenDescriptor = new SecurityTokenDescriptor
             {

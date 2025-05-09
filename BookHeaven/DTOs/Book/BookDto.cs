@@ -12,6 +12,8 @@ namespace BookHeaven.DTOs.Book
         public decimal Price { get; set; }
         public bool IsOnSale { get; set; }
         public int DiscountPercent { get; set; }
+        public DateTime? DiscountStart { get; set; }
+        public DateTime? DiscountEnd { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
         public int StockQuantity { get; set; }
         public string Description { get; set; } = string.Empty;

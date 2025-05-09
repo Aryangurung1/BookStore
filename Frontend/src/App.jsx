@@ -17,6 +17,7 @@ import OrderManagement from './pages/OrderManagement';
 import StaffPanel from './pages/StaffPanel';
 import StaffBooks from './pages/StaffBooks';
 import StaffFulfilledOrders from './pages/StaffFulfilledOrders';
+import Announcements from './pages/Announcements';
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -35,6 +36,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/books" element={<BookPage />} />
         <Route path="/book/:id" element={<BookDetailPage />} />
+        <Route path="/announcements" element={<Announcements />} />
 
         {/* Member Routes */}
         <Route

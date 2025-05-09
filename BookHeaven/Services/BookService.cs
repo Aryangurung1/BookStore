@@ -114,7 +114,10 @@ namespace BookHeaven.Services
                 ImageUrl = book.ImageUrl,
                 AverageRating = book.Reviews.Any() ? book.Reviews.Average(r => r.Rating) : 0,
                 IsAvailableInLibrary = book.IsAvailableInLibrary,
-                DiscountPercent = (int)(book.DiscountPercent ?? 0)
+                IsOnSale = book.IsOnSale,
+                DiscountPercent = (int)(book.DiscountPercent ?? 0),
+                DiscountStart = book.DiscountStart,
+                DiscountEnd = book.DiscountEnd
             };
         }
 
@@ -142,7 +145,10 @@ namespace BookHeaven.Services
                 ImageUrl = b.ImageUrl,
                 AverageRating = b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) : 0,
                 IsAvailableInLibrary = b.IsAvailableInLibrary,
-                DiscountPercent = (int)(b.DiscountPercent ?? 0)
+                IsOnSale = b.IsOnSale,
+                DiscountPercent = (int)(b.DiscountPercent ?? 0),
+                DiscountStart = b.DiscountStart,
+                DiscountEnd = b.DiscountEnd
             }).ToList();
         }
 
@@ -167,6 +173,37 @@ namespace BookHeaven.Services
             book.IsAvailableInLibrary = dto.IsAvailableInLibrary;
             book.DiscountPercent = dto.DiscountPercent ?? 0;
             book.PublicationDate = dto.PublicationDate;
+            book.IsOnSale = dto.IsOnSale;
+            book.DiscountStart = dto.DiscountStart;
+            book.DiscountEnd = dto.DiscountEnd;
+
+            // Handle image update if provided
+            if (dto.Image != null && dto.Image.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+                Directory.CreateDirectory(uploadsFolder);
+
+                // Delete old image if exists
+                if (!string.IsNullOrEmpty(book.ImageUrl))
+                {
+                    var oldImagePath = Path.Combine(_env.WebRootPath, book.ImageUrl.TrimStart('/'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+
+                // Save new image
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + dto.Image.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await dto.Image.CopyToAsync(fileStream);
+                }
+
+                book.ImageUrl = "/uploads/" + uniqueFileName;
+            }
 
             await _context.SaveChangesAsync();
             return book;

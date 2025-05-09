@@ -133,10 +133,10 @@ const BookDetailPage = () => {
         <div className="flex space-x-4">
           <button
             onClick={handleAddToCart}
-            disabled={!user}
-            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 disabled:opacity-50"
+            disabled={!user || !book.isAvailableInLibrary || book.stockQuantity <= 0}
+            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Add to Cart
+            {!book.isAvailableInLibrary || book.stockQuantity <= 0 ? 'Not Available' : 'Add to Cart'}
           </button>
           <button
             onClick={handleBookmark}

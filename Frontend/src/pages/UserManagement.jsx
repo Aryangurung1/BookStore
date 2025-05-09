@@ -85,19 +85,24 @@ const UserManagement = () => {
     }
   };
 
-  const handleDeleteMember = async (userId) => {
-    if (!userId) {
+  const handleDeleteMember = async (memberId) => {
+    if (!memberId) {
       setError('Invalid member ID');
       return;
     }
-    if (!window.confirm('Are you sure you want to delete this member?')) return;
+    
+    const confirmDelete = window.confirm(
+      'Are you sure you want to delete this member? This will also delete all their orders, cart items, reviews, and bookmarks. This action cannot be undone.'
+    );
+    
+    if (!confirmDelete) return;
     
     try {
-      await axios.delete(`http://localhost:5176/api/Admin/members/${userId}`, {
+      await axios.delete(`http://localhost:5176/api/Admin/members/${memberId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Remove the deleted member from the list
-      setMembers(prev => prev.filter(member => member.userId !== userId));
+      setMembers(prev => prev.filter(member => member.memberId !== memberId));
       setError('');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to delete member');
@@ -140,18 +145,18 @@ const UserManagement = () => {
 
       {activeTab === 'members' && (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {members.map((member) => (
-            <div key={member.userId} className="bg-white rounded-lg shadow-lg p-6">
+          {members.map((member, idx) => (
+            <div key={member.memberId || idx} className="bg-white rounded-lg shadow-lg p-6">
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">{member.name}</h3>
+                  <h3 className="font-semibold text-lg mb-2">{member.fullName}</h3>
                   <p className="text-gray-600 text-sm">{member.email}</p>
                   <p className="text-sm text-gray-500 mt-2">
                     Joined: {new Date(member.joinDate).toLocaleDateString()}
                   </p>
                 </div>
                 <button
-                  onClick={() => handleDeleteMember(member.userId)}
+                  onClick={() => handleDeleteMember(member.memberId)}
                   className="text-red-600 hover:text-red-800"
                 >
                   Delete
@@ -247,8 +252,8 @@ const UserManagement = () => {
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {staffs.map((staff) => (
-              <div key={staff.staffId} className="bg-white rounded-lg shadow-lg p-6">
+            {staffs.map((staff, idx) => (
+              <div key={staff.staffId || idx} className="bg-white rounded-lg shadow-lg p-6">
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-semibold text-lg mb-2">{staff.fullName}</h3>

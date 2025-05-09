@@ -40,7 +40,7 @@ namespace BookHeaven.Services
                 foreach (var item in dto.Items)
                 {
                     var book = await _context.Books.FindAsync(item.BookId);
-                    if (book == null || book.StockQuantity < item.Quantity)
+                    if (book == null)
                         throw new Exception($"Book not available: {item.BookId}");
 
                     var unitPrice = book.IsOnSale && book.DiscountPercent.HasValue
@@ -55,7 +55,6 @@ namespace BookHeaven.Services
                     });
 
                     total += unitPrice * item.Quantity;
-                    book.StockQuantity -= item.Quantity;
                 }
 
                 if (dto.Items.Count >= 5)

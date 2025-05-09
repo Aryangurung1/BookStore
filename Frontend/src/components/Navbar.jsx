@@ -21,6 +21,9 @@ const Navbar = () => {
           <Link to="/" className="hover:text-gray-300">
             Browse
           </Link>
+          <Link to="/announcements" className="hover:text-gray-300">
+            📢 Announcements
+          </Link>
           {user?.role === 'Admin' && (
             <>
               {/* Admin Links */}

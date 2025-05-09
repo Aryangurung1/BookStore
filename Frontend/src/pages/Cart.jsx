@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const placeholderImg = '/placeholder-book.jpg';
 
 const Cart = () => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const navigate = useNavigate();
   const [cart, setCart] = useState([]);
   const [error, setError] = useState('');
@@ -48,7 +48,7 @@ const Cart = () => {
       setSuccess('Cart updated!');
       fetchCart();
     } catch (err) {
-      setError('Failed to update quantity');
+      setError(err.response?.data?.message || 'Failed to update quantity');
     }
   };
 
@@ -108,7 +108,21 @@ const Cart = () => {
 
   if (loading) return <div className="p-6">Loading...</div>;
 
-  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  // Calculate totals
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const totalDiscount = cart.reduce((sum, item) => {
+    if (item.isOnSale && item.discountPercent > 0) {
+      return sum + ((item.price * item.discountPercent / 100) * item.quantity);
+    }
+    return sum;
+  }, 0);
+  const afterBookDiscount = subtotal - totalDiscount;
+  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const fivePercent = totalQuantity >= 5 ? afterBookDiscount * 0.05 : 0;
+  // For demo, assume user.fulfilledOrders is available; otherwise, set to 0
+  const fulfilledOrders = user?.fulfilledOrders ?? 0;
+  const tenPercent = fulfilledOrders >= 10 ? (afterBookDiscount - fivePercent) * 0.10 : 0;
+  const finalTotal = afterBookDiscount - fivePercent - tenPercent;
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -161,8 +175,20 @@ const Cart = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="font-medium">${(item.price * item.quantity).toFixed(2)}</div>
-                      <div className="text-sm text-gray-500">${item.price.toFixed(2)} each</div>
+                      {item.isOnSale && item.discountPercent > 0 ? (
+                        <>
+                          <div className="text-sm text-gray-500 line-through">${item.price.toFixed(2)} each</div>
+                          <div className="font-medium text-green-700">
+                            ${(item.price * (1 - item.discountPercent / 100) * item.quantity).toFixed(2)}
+                            <span className="ml-1 text-xs text-green-700">({item.discountPercent}% off)</span>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="font-medium">${(item.price * item.quantity).toFixed(2)}</div>
+                          <div className="text-sm text-gray-500">${item.price.toFixed(2)} each</div>
+                        </>
+                      )}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <button
@@ -177,11 +203,39 @@ const Cart = () => {
           </div>
 
           <div className="mt-6 bg-white rounded-lg shadow-lg p-6">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center mb-2">
               <div>
-                <p className="text-lg font-medium">Total:</p>
+                <p className="text-lg font-medium">Subtotal:</p>
               </div>
-              <p className="text-2xl font-bold">${total.toFixed(2)}</p>
+              <p className="text-lg">${subtotal.toFixed(2)}</p>
+            </div>
+            <div className="flex justify-between items-center mb-2">
+              <div>
+                <p className="text-lg font-medium">Book Discounts:</p>
+              </div>
+              <p className="text-lg text-green-700">-${totalDiscount.toFixed(2)}</p>
+            </div>
+            {fivePercent > 0 && (
+              <div className="flex justify-between items-center mb-2">
+                <div>
+                  <p className="text-lg font-medium">5% Discount (5+ books):</p>
+                </div>
+                <p className="text-lg text-green-700">-${fivePercent.toFixed(2)}</p>
+              </div>
+            )}
+            {tenPercent > 0 && (
+              <div className="flex justify-between items-center mb-2">
+                <div>
+                  <p className="text-lg font-medium">10% Loyalty Discount:</p>
+                </div>
+                <p className="text-lg text-green-700">-${tenPercent.toFixed(2)}</p>
+              </div>
+            )}
+            <div className="flex justify-between items-center mb-2">
+              <div>
+                <p className="text-xl font-bold">Total After Discounts:</p>
+              </div>
+              <p className="text-2xl font-bold">${finalTotal.toFixed(2)}</p>
             </div>
             <button
               className="mt-4 w-full bg-gray-200 text-gray-700 py-2 px-4 rounded hover:bg-gray-300"

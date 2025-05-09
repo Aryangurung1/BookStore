@@ -28,13 +28,26 @@ namespace BookHeaven.Services
                     Author = c.Book.Author,
                     Quantity = c.Quantity,
                     Price = c.Book.Price,
-                    IsOnSale = c.Book.IsOnSale
+                    IsOnSale = c.Book.IsOnSale,
+                    DiscountPercent = c.Book.DiscountPercent.HasValue ? (int)c.Book.DiscountPercent.Value : 0
                 })
                 .ToListAsync();
         }
 
         public async Task AddOrUpdateCartItemAsync(int memberId, UpdateCartDto dto)
         {
+            // First check if the book exists and is available
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.BookId == dto.BookId);
+            if (book == null)
+            {
+                throw new Exception("Book not found");
+            }
+
+            if (!book.IsAvailableInLibrary || book.StockQuantity <= 0)
+            {
+                throw new Exception("This book is not available in the library");
+            }
+
             var existing = await _context.CartItems
                 .FirstOrDefaultAsync(c => c.MemberId == memberId && c.BookId == dto.BookId);
 
@@ -46,6 +59,12 @@ namespace BookHeaven.Services
                     await _context.SaveChangesAsync();
                 }
                 return;
+            }
+
+            // Check if requested quantity is available
+            if (dto.Quantity > book.StockQuantity)
+            {
+                throw new Exception($"Only {book.StockQuantity} copies available");
             }
 
             if (existing == null)

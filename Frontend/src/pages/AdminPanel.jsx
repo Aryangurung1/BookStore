@@ -28,7 +28,7 @@ const AdminPanel = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
-  const [newAnnouncement, setNewAnnouncement] = useState({ title: '', content: '', endDate: '' });
+  const [newAnnouncement, setNewAnnouncement] = useState({ title: '', message: '', endTime: '' });
 
   useEffect(() => {
     if (activeTab === 'books') fetchBooks();
@@ -98,10 +98,16 @@ const AdminPanel = () => {
   const handleAddAnnouncement = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5176/api/Announcement', newAnnouncement, {
+      // Convert endTime to UTC ISO string
+      const endTimeUtc = new Date(newAnnouncement.endTime).toISOString();
+      const payload = {
+        ...newAnnouncement,
+        endTime: endTimeUtc,
+      };
+      await axios.post('http://localhost:5176/api/announcements', payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setNewAnnouncement({ title: '', content: '', endDate: '' });
+      setNewAnnouncement({ title: '', message: '', endTime: '' });
       fetchAnnouncements();
     } catch (err) {
       setError('Failed to add announcement');
@@ -381,12 +387,12 @@ const AdminPanel = () => {
                   <input type="text" value={newAnnouncement.title} onChange={e => setNewAnnouncement((prev) => ({ ...prev, title: e.target.value }))} className="w-full border rounded px-3 py-2" required />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
-                  <textarea value={newAnnouncement.content} onChange={e => setNewAnnouncement((prev) => ({ ...prev, content: e.target.value }))} className="w-full border rounded px-3 py-2" rows="3" required />
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                  <textarea value={newAnnouncement.message} onChange={e => setNewAnnouncement((prev) => ({ ...prev, message: e.target.value }))} className="w-full border rounded px-3 py-2" rows="3" required />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-                  <input type="date" value={newAnnouncement.endDate} onChange={e => setNewAnnouncement((prev) => ({ ...prev, endDate: e.target.value }))} className="w-full border rounded px-3 py-2" required />
+                  <label className="block text-sm font-medium text-gray-700 mb-1">End Time</label>
+                  <input type="datetime-local" value={newAnnouncement.endTime} onChange={e => setNewAnnouncement((prev) => ({ ...prev, endTime: e.target.value }))} className="w-full border rounded px-3 py-2" required />
                 </div>
                 <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Add Announcement</button>
               </div>
@@ -398,11 +404,11 @@ const AdminPanel = () => {
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h3 className="font-semibold text-lg mb-2">{announcement.title}</h3>
-                    <p className="text-gray-600">{announcement.content}</p>
+                    <p className="text-gray-600">{announcement.message}</p>
                   </div>
                   <button onClick={() => handleDeleteAnnouncement(announcement.id)} className="text-red-600 hover:text-red-800">Delete</button>
                 </div>
-                <p className="text-sm text-gray-500">Expires: {new Date(announcement.endDate).toLocaleDateString()}</p>
+                <p className="text-sm text-gray-500">Expires: {new Date(announcement.endTime).toLocaleDateString()}</p>
               </div>
             ))}
           </div>

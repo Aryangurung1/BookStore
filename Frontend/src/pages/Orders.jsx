@@ -65,7 +65,7 @@ const Orders = () => {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium text-lg">${order.totalAmount.toFixed(2)}</p>
+                  <p className="font-medium text-lg">${(order.totalPrice !== undefined && order.totalPrice !== null ? order.totalPrice : order.totalAmount).toFixed(2)}</p>
                   <p className={`text-sm ${
                     order.status === 'Cancelled' ? 'text-red-600' :
                     order.status === 'Completed' ? 'text-green-600' :
@@ -90,7 +90,7 @@ const Orders = () => {
                         </Link>
                         <span className="text-gray-500 ml-2">x{item.quantity}</span>
                       </div>
-                      <span>${(item.price * item.quantity).toFixed(2)}</span>
+                      <span>${((item.unitPrice !== undefined && item.unitPrice !== null) ? item.unitPrice : item.price) * item.quantity}</span>
                     </li>
                   ))}
                 </ul>

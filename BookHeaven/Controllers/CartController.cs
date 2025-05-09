@@ -43,8 +43,15 @@ namespace BookHeaven.Controllers
         [HttpPost]
         public async Task<IActionResult> AddOrUpdateCart(UpdateCartDto dto)
         {
-            await _cartService.AddOrUpdateCartItemAsync(GetMemberId(), dto);
-            return Ok(new { message = "Cart updated." });
+            try
+            {
+                await _cartService.AddOrUpdateCartItemAsync(GetMemberId(), dto);
+                return Ok(new { message = "Cart updated." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{bookId}")]

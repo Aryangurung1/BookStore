@@ -4,24 +4,13 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
-  const [announcements, setAnnouncements] = useState([]);
   const [featuredBooks, setFeaturedBooks] = useState([]);
   const [error, setError] = useState('');
   const { user } = useAuth();
 
   useEffect(() => {
-    fetchAnnouncements();
     fetchFeaturedBooks();
   }, []);
-
-  const fetchAnnouncements = async () => {
-    try {
-      const res = await axios.get('http://localhost:5176/api/Announcement/active');
-      setAnnouncements(res.data);
-    } catch (err) {
-      console.error('Failed to load announcements');
-    }
-  };
 
   const fetchFeaturedBooks = async () => {
     try {
@@ -48,27 +37,6 @@ const Home = () => {
           )}
         </p>
       </section>
-
-      {/* Announcements */}
-      {announcements.length > 0 && (
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">📢 Announcements</h2>
-          <div className="grid gap-6 md:grid-cols-2">
-            {announcements.map((announcement) => (
-              <div
-                key={announcement.id}
-                className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-indigo-600"
-              >
-                <h3 className="font-semibold text-lg mb-2">{announcement.title}</h3>
-                <p className="text-gray-600 mb-2">{announcement.content}</p>
-                <p className="text-sm text-gray-500">
-                  Valid until: {new Date(announcement.endDate).toLocaleDateString()}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* Featured Books */}
       {(!user || (user.role !== 'Admin' && user.role !== 'Staff')) && (

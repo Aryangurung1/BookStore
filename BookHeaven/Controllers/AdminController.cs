@@ -101,12 +101,36 @@ namespace BookHeaven.Controllers
         [HttpDelete("members/{memberId}")]
         public async Task<IActionResult> DeleteMember(int memberId)
         {
-            var member = await _context.Members.FirstOrDefaultAsync(m => m.MemberId == memberId);
-            if (member == null) return NotFound(new { message = "Member not found" });
+            var member = await _context.Members
+                .Include(m => m.Orders)
+                .Include(m => m.CartItems)
+                .Include(m => m.Reviews)
+                .Include(m => m.Bookmarks)
+                .FirstOrDefaultAsync(m => m.MemberId == memberId);
+
+            if (member == null) 
+                return NotFound(new { message = "Member not found" });
             
+            // Delete all associated data
+            _context.CartItems.RemoveRange(member.CartItems);
+            _context.Reviews.RemoveRange(member.Reviews);
+            _context.Bookmarks.RemoveRange(member.Bookmarks);
+            
+            // For orders, we need to handle the cascade deletion of order items
+            foreach (var order in member.Orders)
+            {
+                var orderItems = await _context.OrderItems
+                    .Where(oi => oi.OrderId == order.OrderId)
+                    .ToListAsync();
+                _context.OrderItems.RemoveRange(orderItems);
+            }
+            _context.Orders.RemoveRange(member.Orders);
+            
+            // Finally remove the member
             _context.Members.Remove(member);
             await _context.SaveChangesAsync();
-            return Ok(new { message = "Member removed successfully" });
+            
+            return Ok(new { message = "Member and all associated data removed successfully" });
         }
 
         [HttpGet("orders")]

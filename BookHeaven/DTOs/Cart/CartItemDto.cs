@@ -14,5 +14,6 @@ namespace BookHeaven.DTOs.Cart
 
         public decimal Price { get; set; }
         public bool IsOnSale { get; set; }
+        public int DiscountPercent { get; set; }
     }
 }

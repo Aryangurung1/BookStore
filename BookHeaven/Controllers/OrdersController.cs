@@ -40,6 +40,10 @@ namespace BookHeaven.Controllers
             {
                 var memberId = GetMemberId();
                 var order = await _orderService.PlaceOrderAsync(memberId, dto);
+                // Clear the cart after successful order
+                var cartItems = await _context.CartItems.Where(c => c.MemberId == memberId).ToListAsync();
+                _context.CartItems.RemoveRange(cartItems);
+                await _context.SaveChangesAsync();
                 return Ok(new {
                     message = "Order created successfully",
                     orderId = order.OrderId,
@@ -109,13 +113,14 @@ namespace BookHeaven.Controllers
                     {
                         o.OrderId,
                         o.OrderDate,
-                        o.TotalAmount,
+                        totalAmount = o.TotalPrice,
                         o.Status,
                         Items = o.OrderItems.Select(i => new
                         {
                             i.Book.Title,
                             i.Book.Author,
                             i.Book.Price,
+                            unitPrice = i.UnitPrice,
                             i.Quantity
                         })
                     })
