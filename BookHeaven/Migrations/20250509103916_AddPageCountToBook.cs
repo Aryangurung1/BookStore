@@ -16,21 +16,11 @@ namespace BookHeaven.Migrations
                 type: "integer",
                 nullable: false,
                 defaultValue: 0);
-
-            migrationBuilder.InsertData(
-                table: "Admins",
-                columns: new[] { "AdminId", "Email", "FullName", "PasswordHash" },
-                values: new object[] { 1, "admin@bookheaven.com", "System Administrator", "$2a$11$Pu4/4jjKrYaFAqMSazPWi.EpTa5dasGYEWS.64FyhoCkBEFtoxp22" });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "Admins",
-                keyColumn: "AdminId",
-                keyValue: 1);
-
             migrationBuilder.DropColumn(
                 name: "PageCount",
                 table: "Books");
