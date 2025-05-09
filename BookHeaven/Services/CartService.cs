@@ -24,6 +24,8 @@ namespace BookHeaven.Services
                 {
                     BookId = c.BookId,
                     BookTitle = c.Book.Title,
+                    ImageUrl = c.Book.ImageUrl,
+                    Author = c.Book.Author,
                     Quantity = c.Quantity,
                     Price = c.Book.Price,
                     IsOnSale = c.Book.IsOnSale

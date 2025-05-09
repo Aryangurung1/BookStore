@@ -7,6 +7,8 @@ namespace BookHeaven.DTOs.Cart
         [Required]
         public int BookId { get; set; }
         public string BookTitle { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
+        public string Author { get; set; } = string.Empty;
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]
         public int Quantity { get; set; }
 

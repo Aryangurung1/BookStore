@@ -5,46 +5,54 @@ namespace BookHeaven.DTOs.Book
 {
     public class CreateBookDto
     {
-        [Required]
+        [Required(ErrorMessage = "Title is required")]
         [StringLength(200)]
-        public required string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = "ISBN is required")]
         [StringLength(13)]
-        public required string ISBN { get; set; }
+        public string ISBN { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Description is required")]
         [StringLength(2000)]
-        public required string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Author is required")]
         [StringLength(200)]
-        public required string Author { get; set; }
+        public string Author { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Genre is required")]
         [StringLength(50)]
-        public required string Genre { get; set; }
+        public string Genre { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Language is required")]
         [StringLength(50)]
-        public required string Language { get; set; }
+        public string Language { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Format is required")]
         [StringLength(50)]
-        public required string Format { get; set; }
+        public string Format { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Publisher is required")]
         [StringLength(200)]
-        public required string Publisher { get; set; }
+        public string Publisher { get; set; } = string.Empty;
 
-        [Required]
-        [Range(0.01, 99999.99)]
+        [Required(ErrorMessage = "Price is required")]
+        [Range(0.01, 99999.99, ErrorMessage = "Price must be between 0.01 and 99999.99")]
         public decimal Price { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Publication date is required")]
         public DateTime PublicationDate { get; set; }
 
-        [Required]
-        [Range(0, int.MaxValue)]
+        [Required(ErrorMessage = "Stock quantity is required")]
+        [Range(0, int.MaxValue, ErrorMessage = "Stock quantity must be non-negative")]
         public int StockQuantity { get; set; }
 
         public bool IsAvailableInLibrary { get; set; }
 
-        [Required]
-        public required IFormFile Image { get; set; }
+        [Required(ErrorMessage = "Image is required")]
+        public IFormFile Image { get; set; } = null!;
+
+        public decimal? DiscountPercent { get; set; }
     }
 }

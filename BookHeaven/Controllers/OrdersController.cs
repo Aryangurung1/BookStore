@@ -5,6 +5,7 @@ using BookHeaven.Models;
 using BookHeaven.DTOs.Order;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using BookHeaven.Services.Interfaces;
 
 namespace BookHeaven.Controllers
 {
@@ -13,10 +14,12 @@ namespace BookHeaven.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IOrderService _orderService;
 
-        public OrdersController(AppDbContext context)
+        public OrdersController(AppDbContext context, IOrderService orderService)
         {
             _context = context;
+            _orderService = orderService;
         }
 
         private int GetMemberId() 
@@ -36,56 +39,14 @@ namespace BookHeaven.Controllers
             try
             {
                 var memberId = GetMemberId();
-
-                // Validate items exist and are available
-                var bookIds = dto.Items.Select(i => i.BookId).ToList();
-                var books = await _context.Books
-                    .Where(b => bookIds.Contains(b.BookId))
-                    .ToDictionaryAsync(b => b.BookId, b => b);
-
-                if (books.Count != bookIds.Count)
-                {
-                    return BadRequest(new { message = "One or more books not found" });
-                }
-
-                // Calculate total amount
-                decimal totalAmount = 0;
-                var orderItems = new List<OrderItem>();
-                foreach (var item in dto.Items)
-                {
-                    var book = books[item.BookId];
-                    totalAmount += book.Price * item.Quantity;
-                    orderItems.Add(new OrderItem
-                    {
-                        BookId = item.BookId,
-                        Quantity = item.Quantity,
-                        Price = book.Price
-                    });
-                }
-
-                var order = new Order
-                {
-                    MemberId = memberId,
-                    OrderDate = DateTime.UtcNow,
-                    Status = "Pending",
-                    TotalAmount = totalAmount,
-                    OrderItems = orderItems
-                };
-
-                _context.Orders.Add(order);
-                await _context.SaveChangesAsync();
-
-                // Clear cart after successful order
-                var cartItems = await _context.CartItems
-                    .Where(c => c.MemberId == memberId && bookIds.Contains(c.BookId))
-                    .ToListAsync();
-                _context.CartItems.RemoveRange(cartItems);
-                await _context.SaveChangesAsync();
-
-                return Ok(new { 
+                var order = await _orderService.PlaceOrderAsync(memberId, dto);
+                return Ok(new {
                     message = "Order created successfully",
                     orderId = order.OrderId,
-                    totalAmount = order.TotalAmount
+                    totalAmount = order.TotalPrice,
+                    claimCode = order.ClaimCode,
+                    appliedFivePercentDiscount = order.AppliedFivePercentDiscount,
+                    appliedTenPercentDiscount = order.AppliedTenPercentDiscount
                 });
             }
             catch (UnauthorizedAccessException)

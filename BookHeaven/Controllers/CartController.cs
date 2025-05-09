@@ -20,12 +20,17 @@ namespace BookHeaven.Controllers
 
         private int GetMemberId() 
         {
-            var memberId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var memberId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                        ?? User.FindFirst("memberId")?.Value;
             if (string.IsNullOrEmpty(memberId))
             {
                 throw new InvalidOperationException("Member ID is missing.");
             }
-            return int.Parse(memberId);
+            if (!int.TryParse(memberId, out int id))
+            {
+                throw new InvalidOperationException("Invalid Member ID.");
+            }
+            return id;
         }
 
         [HttpGet]

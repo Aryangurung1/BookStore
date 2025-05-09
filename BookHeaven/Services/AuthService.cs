@@ -29,7 +29,7 @@ namespace BookHeaven.Services
             var member = await _context.Members.FirstOrDefaultAsync(m => m.Email == dto.Email);
             if (member != null && BCrypt.Net.BCrypt.Verify(dto.Password, member.PasswordHash))
             {
-                var token = GenerateJwtToken(member.Email, member.FullName, "Member");
+                var token = GenerateJwtToken(member.Email, member.FullName, "Member", member.MemberId);
                 return token;
             }
 
@@ -103,7 +103,7 @@ namespace BookHeaven.Services
             return "Registration successful";
         }
 
-        private string GenerateJwtToken(string email, string fullName, string role)
+        private string GenerateJwtToken(string email, string fullName, string role, int? memberId = null)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
             var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"] ?? throw new InvalidOperationException("JWT Secret Key is not configured"));
@@ -111,14 +111,19 @@ namespace BookHeaven.Services
             var audience = jwtSettings["Audience"] ?? throw new InvalidOperationException("JWT Audience is not configured");
 
             var tokenHandler = new JwtSecurityTokenHandler();
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, email),
+                new Claim(ClaimTypes.Name, fullName),
+                new Claim(ClaimTypes.Role, role)
+            };
+            if (role == "Member" && memberId.HasValue)
+            {
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, memberId.Value.ToString()));
+            }
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.Name, fullName),
-                    new Claim(ClaimTypes.Role, role)
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Issuer = issuer,

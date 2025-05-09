@@ -242,3 +242,5 @@ E:\Servlets\BookStore\BookHeaven\bin\Debug\net8.0\BookHeaven.pdb
 E:\Servlets\BookStore\BookHeaven\obj\Debug\net8.0\BookHeaven.genruntimeconfig.cache
 E:\Servlets\BookStore\BookHeaven\obj\Debug\net8.0\ref\BookHeaven.dll
 E:\Servlets\BookStore\BookHeaven\obj\Debug\net8.0\BookHeaven.sourcelink.json
+E:\Servlets\BookStore\BookHeaven\bin\Debug\net8.0\package-lock.json
+E:\Servlets\BookStore\BookHeaven\bin\Debug\net8.0\package.json

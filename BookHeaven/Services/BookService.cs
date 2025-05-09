@@ -8,6 +8,7 @@ using BookHeaven.Data;
 using BookHeaven.DTOs.Book;
 using BookHeaven.Models;
 using BookHeaven.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace BookHeaven.Services
 {
@@ -15,18 +16,42 @@ namespace BookHeaven.Services
     {
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _env;
+        private readonly ILogger<BookService> _logger;
 
-        public BookService(AppDbContext context, IWebHostEnvironment env)
+        public BookService(AppDbContext context, IWebHostEnvironment env, ILogger<BookService> logger)
         {
             _context = context;
             _env = env;
+            _logger = logger;
         }
 
         public async Task<Book?> CreateBookAsync(CreateBookDto dto)
         {
+            _logger.LogInformation("Creating book with ISBN: {ISBN}", dto.ISBN);
+
+            if (dto.Image == null || dto.Image.Length == 0)
+            {
+                throw new ArgumentException("Image file is required");
+            }
+
+            // Handle image upload first
+            var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+            Directory.CreateDirectory(uploadsFolder);
+
+            var uniqueFileName = Guid.NewGuid().ToString() + "_" + dto.Image.FileName;
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await dto.Image.CopyToAsync(fileStream);
+            }
+
+            var imageUrl = "/uploads/" + uniqueFileName;
+
             var book = new Book
             {
                 Title = dto.Title,
+                ISBN = dto.ISBN,
                 Description = dto.Description,
                 Author = dto.Author,
                 Genre = dto.Genre,
@@ -34,30 +59,32 @@ namespace BookHeaven.Services
                 Format = dto.Format,
                 Publisher = dto.Publisher,
                 Price = dto.Price,
+                PublicationDate = DateTime.SpecifyKind(dto.PublicationDate, DateTimeKind.Utc),
                 StockQuantity = dto.StockQuantity,
-                IsAvailableInLibrary = dto.IsAvailableInLibrary
+                IsAvailableInLibrary = dto.IsAvailableInLibrary,
+                ImageUrl = imageUrl,
+                DiscountPercent = dto.DiscountPercent ?? 0
             };
 
-            if (dto.Image != null && dto.Image.Length > 0)
+            _logger.LogInformation("Created book object with ISBN: {ISBN}", book.ISBN);
+
+            try
             {
-                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
-                Directory.CreateDirectory(uploadsFolder);
-
-                var uniqueFileName = Guid.NewGuid().ToString() + "_" + dto.Image.FileName;
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await dto.Image.CopyToAsync(fileStream);
-                }
-
-                book.ImageUrl = "/uploads/" + uniqueFileName;
+                _context.Books.Add(book);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Successfully saved book with ISBN: {ISBN}", book.ISBN);
+                return book;
             }
-
-            _context.Books.Add(book);
-            await _context.SaveChangesAsync();
-
-            return book;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving book with ISBN: {ISBN}", book.ISBN);
+                // Clean up the uploaded file if save fails
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                throw;
+            }
         }
 
         public async Task<BookDto?> GetBookByIdAsync(int bookId)
@@ -85,7 +112,9 @@ namespace BookHeaven.Services
                 PageCount = book.PageCount,
                 StockQuantity = book.StockQuantity,
                 ImageUrl = book.ImageUrl,
-                AverageRating = book.Reviews.Any() ? book.Reviews.Average(r => r.Rating) : 0
+                AverageRating = book.Reviews.Any() ? book.Reviews.Average(r => r.Rating) : 0,
+                IsAvailableInLibrary = book.IsAvailableInLibrary,
+                DiscountPercent = (int)(book.DiscountPercent ?? 0)
             };
         }
 
@@ -111,7 +140,9 @@ namespace BookHeaven.Services
                 PageCount = b.PageCount,
                 StockQuantity = b.StockQuantity,
                 ImageUrl = b.ImageUrl,
-                AverageRating = b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) : 0
+                AverageRating = b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) : 0,
+                IsAvailableInLibrary = b.IsAvailableInLibrary,
+                DiscountPercent = (int)(b.DiscountPercent ?? 0)
             }).ToList();
         }
 
@@ -134,6 +165,8 @@ namespace BookHeaven.Services
             book.Price = dto.Price;
             book.StockQuantity = dto.StockQuantity;
             book.IsAvailableInLibrary = dto.IsAvailableInLibrary;
+            book.DiscountPercent = dto.DiscountPercent ?? 0;
+            book.PublicationDate = dto.PublicationDate;
 
             await _context.SaveChangesAsync();
             return book;
@@ -202,7 +235,9 @@ namespace BookHeaven.Services
                 Language = b.Language,
                 Format = b.Format,
                 IsOnSale = b.IsOnSale,
-                ImageUrl = b.ImageUrl
+                ImageUrl = b.ImageUrl,
+                IsAvailableInLibrary = b.IsAvailableInLibrary,
+                DiscountPercent = (int)(b.DiscountPercent ?? 0)
             }).ToListAsync();
         }
     }

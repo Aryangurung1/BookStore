@@ -15,7 +15,8 @@ export const AuthProvider = ({ children }) => {
         setUser({
           email: decoded.email,
           fullName: decoded.name || decoded.fullName || decoded.email,
-          role: decoded.role || decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+          role: decoded.role || decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
+          id: decoded.nameid || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
         });
       } catch (err) {
         console.error("Invalid token:", err);

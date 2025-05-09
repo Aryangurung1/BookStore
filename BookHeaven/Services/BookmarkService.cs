@@ -64,13 +64,27 @@ namespace BookHeaven.Services
             return await _context.Bookmarks
                 .Where(b => b.MemberId == memberId)
                 .Include(b => b.Book)
+                    .ThenInclude(book => book.Reviews)
                 .Select(b => new BookmarkDto
                 {
                     BookId = b.BookId,
                     BookTitle = b.Book.Title,
                     Author = b.Book.Author,
+                    ISBN = b.Book.ISBN,
+                    Description = b.Book.Description,
+                    Price = b.Book.Price,
                     Genre = b.Book.Genre,
-                    Language = b.Book.Language
+                    Language = b.Book.Language,
+                    Format = b.Book.Format,
+                    Publisher = b.Book.Publisher,
+                    PublicationDate = b.Book.PublicationDate,
+                    PageCount = b.Book.PageCount,
+                    StockQuantity = b.Book.StockQuantity,
+                    ImageUrl = b.Book.ImageUrl,
+                    AverageRating = b.Book.Reviews.Any() ? b.Book.Reviews.Average(r => r.Rating) : 0,
+                    IsAvailableInLibrary = b.Book.IsAvailableInLibrary,
+                    DiscountPercent = (int)(b.Book.DiscountPercent ?? 0),
+                    DateAdded = b.BookmarkedAt
                 })
                 .ToListAsync();
         }
