@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Star, StarOff } from 'lucide-react';
 
 const placeholderImg = '/placeholder-book.jpg';
@@ -118,87 +118,34 @@ const BooksPage = () => {
       {error && <p className="text-red-500 mb-4">{error}</p>}
       {success && <p className="text-green-600 mb-4">{success}</p>}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {books.map(book => (
-          <div key={book.bookId} className="border rounded shadow p-4 bg-white flex flex-col items-center">
+          <div key={book.bookId} className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
             <img
               src={book.imageUrl ? `http://localhost:5176${book.imageUrl}` : placeholderImg}
               alt={book.title}
-              className="object-contain h-40 w-full mb-2 rounded"
+              className="w-full h-56 object-cover"
               onError={e => { e.target.onerror = null; e.target.src = placeholderImg; }}
             />
-            <h3 className="text-lg font-semibold mb-1">{book.title}</h3>
-            <button
-              className={`mb-2 ${isBookBookmarked(book.bookId) ? 'text-yellow-500' : 'text-gray-400'} hover:text-yellow-600`}
-              title={isBookBookmarked(book.bookId) ? 'Remove Bookmark' : 'Bookmark'}
-              onClick={() => handleToggleBookmark(book.bookId)}
-            >
-              {isBookBookmarked(book.bookId) ? <Star fill="currentColor" /> : <StarOff />}
-            </button>
-            <div className="flex gap-2 mt-2">
-              <button
-                className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
-                onClick={() => handleViewBook(book)}
+            <div className="p-4 flex-1 flex flex-col">
+              <h3 className="font-semibold text-lg mb-1 truncate">{book.title}</h3>
+              <p className="text-gray-600 text-sm mb-1 truncate">{book.author}</p>
+              <p className="font-medium text-indigo-600 mb-2">
+                ${book.price?.toFixed(2)}
+                {book.isOnSale && (
+                  <span className="ml-2 text-green-600 text-sm">On Sale! 🎉</span>
+                )}
+              </p>
+              <Link
+                to={`/book/${book.bookId}`}
+                className="text-indigo-600 hover:text-indigo-800 text-sm mt-auto"
               >
-                View
-              </button>
-              <button
-                className="bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-700"
-                onClick={() => handleAddToCart(book.bookId)}
-              >
-                Add to Cart
-              </button>
+                View Details →
+              </Link>
             </div>
           </div>
         ))}
       </div>
-
-      {/* View Book Modal */}
-      {showViewModal && selectedBook && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-xl">
-            <div className="flex justify-between items-start mb-4">
-              <h2 className="text-2xl font-bold">{selectedBook.title}</h2>
-              <button
-                onClick={() => setShowViewModal(false)}
-                className="text-gray-600 hover:text-gray-800"
-              >
-                Close
-              </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="h-64 overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
-                <img
-                  src={selectedBook.imageUrl ? `http://localhost:5176${selectedBook.imageUrl}` : placeholderImg}
-                  alt={selectedBook.title}
-                  className="w-full h-full object-contain"
-                  onError={e => { e.target.onerror = null; e.target.src = placeholderImg; }}
-                />
-                <button
-                  className={`mt-4 ${isBookBookmarked(selectedBook.bookId) ? 'text-yellow-500' : 'text-gray-400'} hover:text-yellow-600`}
-                  title={isBookBookmarked(selectedBook.bookId) ? 'Remove Bookmark' : 'Bookmark'}
-                  onClick={() => handleToggleBookmark(selectedBook.bookId)}
-                >
-                  {isBookBookmarked(selectedBook.bookId) ? <Star fill="currentColor" /> : <StarOff />}
-                </button>
-              </div>
-              <div className="space-y-3">
-                <div><h3 className="font-semibold">Author</h3><p>{selectedBook.author}</p></div>
-                <div><h3 className="font-semibold">ISBN</h3><p>{selectedBook.isbn}</p></div>
-                <div><h3 className="font-semibold">Description</h3><p>{selectedBook.description}</p></div>
-                <div><h3 className="font-semibold">Genre</h3><p>{selectedBook.genre}</p></div>
-                <div><h3 className="font-semibold">Language</h3><p>{selectedBook.language}</p></div>
-                <div><h3 className="font-semibold">Format</h3><p>{selectedBook.format}</p></div>
-                <div><h3 className="font-semibold">Publisher</h3><p>{selectedBook.publisher}</p></div>
-                <div><h3 className="font-semibold">Price</h3><p>${selectedBook.price?.toFixed(2)}</p></div>
-                <div><h3 className="font-semibold">Publication Date</h3><p>{selectedBook.publicationDate ? new Date(selectedBook.publicationDate).toLocaleDateString() : '-'}</p></div>
-                <div><h3 className="font-semibold">Available in Library</h3><p>{selectedBook.isAvailableInLibrary ? 'Yes' : 'No'}</p></div>
-                <div><h3 className="font-semibold">Discount Percent</h3><p>{selectedBook.discountPercent ?? selectedBook.DiscountPercent ?? 0}%</p></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

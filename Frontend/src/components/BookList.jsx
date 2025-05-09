@@ -97,6 +97,12 @@ const BookList = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {books.map((book) => (
           <div key={book.bookId} className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
+            {book.isOnSale && (
+              <div className="flex items-center gap-2 px-4 pt-4">
+                <span className="inline-block w-3 h-3 rounded-full bg-green-500"></span>
+                <span className="text-green-700 font-semibold">On Sale! <span role='img' aria-label='party'>🎉</span></span>
+              </div>
+            )}
             <div className="h-56 bg-gray-100 flex items-center justify-center">
               <img
                 src={book.imageUrl ? `http://localhost:5000${book.imageUrl}` : placeholderImg}

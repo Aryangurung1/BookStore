@@ -23,7 +23,10 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
     stockQuantity: '',
     isAvailableInLibrary: false,
     publicationDate: '',
-    DiscountPercent: '',
+    discountPercent: '',
+    isOnSale: false,
+    discountStart: '',
+    discountEnd: '',
     Image: null
   });
   const [imagePreview, setImagePreview] = useState(initialData?.imageUrl ? `http://localhost:5176${initialData.imageUrl}` : '');
@@ -34,8 +37,11 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
         ...form,
         ...initialData,
         isAvailableInLibrary: initialData.isAvailableInLibrary ?? initialData.IsAvailableInLibrary ?? false,
+        isOnSale: initialData.isOnSale ?? initialData.IsOnSale ?? false,
         publicationDate: formatDateForInput(initialData.publicationDate),
-        DiscountPercent: (initialData.DiscountPercent ?? initialData.discountPercent ?? '').toString(),
+        discountStart: formatDateForInput(initialData.discountStart),
+        discountEnd: formatDateForInput(initialData.discountEnd),
+        discountPercent: (initialData.discountPercent ?? '').toString(),
         Image: null // Don't set the file, just show preview
       });
       setImagePreview(initialData.imageUrl ? `http://localhost:5176${initialData.imageUrl}` : '');
@@ -75,11 +81,15 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
         if (form[key]) {
           formData.append('Image', form[key]);
         }
-      } else if (key === 'publicationDate') {
-        const date = new Date(form[key]);
-        formData.append(key, date.toISOString());
-      } else if (key === 'DiscountPercent') {
+      } else if (['publicationDate', 'discountStart', 'discountEnd'].includes(key)) {
+        if (form[key]) {
+          const date = new Date(form[key]);
+          formData.append(key, date.toISOString());
+        }
+      } else if (key === 'discountPercent') {
         formData.append('DiscountPercent', form[key] === '' ? 0 : form[key]);
+      } else if (key === 'isOnSale') {
+        formData.append('IsOnSale', form[key]);
       } else {
         formData.append(key, form[key]);
       }
@@ -131,8 +141,16 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
           <input id="publicationDate" type="date" name="publicationDate" value={form.publicationDate} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" />
         </div>
         <div className="flex flex-col">
-          <label htmlFor="DiscountPercent" className="mb-1 text-sm font-medium">Discount Percent</label>
-          <input id="DiscountPercent" type="number" name="DiscountPercent" value={form.DiscountPercent} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" min="0" max="100" />
+          <label htmlFor="discountPercent" className="mb-1 text-sm font-medium">Discount Percent</label>
+          <input id="discountPercent" type="number" name="discountPercent" value={form.discountPercent} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" min="0" max="100" />
+        </div>
+        <div className="flex flex-col">
+          <label htmlFor="discountStart" className="mb-1 text-sm font-medium">Discount Start Date</label>
+          <input id="discountStart" type="date" name="discountStart" value={form.discountStart} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" />
+        </div>
+        <div className="flex flex-col">
+          <label htmlFor="discountEnd" className="mb-1 text-sm font-medium">Discount End Date</label>
+          <input id="discountEnd" type="date" name="discountEnd" value={form.discountEnd} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" />
         </div>
         <div className="flex flex-col col-span-2">
           <label htmlFor="Image" className="mb-1 text-sm font-medium">Book Cover Image</label>
@@ -156,6 +174,10 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
         <label className="col-span-2 flex items-center gap-2">
           <input type="checkbox" name="isAvailableInLibrary" checked={form.isAvailableInLibrary} onChange={handleChange} />
           <span className="text-sm font-medium">Available in Physical Library</span>
+        </label>
+        <label className="col-span-2 flex items-center gap-2">
+          <input type="checkbox" name="isOnSale" checked={form.isOnSale} onChange={handleChange} />
+          <span className="text-sm font-medium">On Sale</span>
         </label>
       </div>
       <div className="flex flex-col">

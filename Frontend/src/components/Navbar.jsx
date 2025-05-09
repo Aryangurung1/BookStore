@@ -41,6 +41,12 @@ const Navbar = () => {
               <Link to="/staff" className="hover:text-gray-300">
                 🎫 Staff Panel
               </Link>
+              <Link to="/staff/books" className="hover:text-gray-300">
+                📚 Books
+              </Link>
+              <Link to="/staff/fulfilled-orders" className="hover:text-gray-300">
+                ✅ Fulfilled Orders
+              </Link>
             </>
           )}
           {user?.role === 'Member' && (

@@ -15,6 +15,8 @@ import UserManagement from './pages/UserManagement';
 import Orders from './pages/Orders';
 import OrderManagement from './pages/OrderManagement';
 import StaffPanel from './pages/StaffPanel';
+import StaffBooks from './pages/StaffBooks';
+import StaffFulfilledOrders from './pages/StaffFulfilledOrders';
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -66,6 +68,22 @@ const App = () => {
           element={
             <ProtectedRoute allowedRoles={['Staff']}>
               <StaffPanel />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/staff/books"
+          element={
+            <ProtectedRoute allowedRoles={['Staff']}>
+              <StaffBooks />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/staff/fulfilled-orders"
+          element={
+            <ProtectedRoute allowedRoles={['Staff']}>
+              <StaffFulfilledOrders />
             </ProtectedRoute>
           }
         />

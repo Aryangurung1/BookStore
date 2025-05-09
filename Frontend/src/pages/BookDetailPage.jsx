@@ -120,7 +120,12 @@ const BookDetailPage = () => {
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
         <h2 className="text-2xl font-bold mb-2">{book.title}</h2>
         <p className="text-gray-600 mb-2">Author: {book.author}</p>
+        <p className="mb-2">ISBN: {book.isbn}</p>
         <p className="mb-2">Genre: {book.genre} | Format: {book.format} | Language: {book.language}</p>
+        <p className="mb-2">Publisher: {book.publisher}</p>
+        <p className="mb-2">Publication Date: {book.publicationDate ? new Date(book.publicationDate).toLocaleDateString() : '-'}</p>
+        <p className="mb-2">Available in Library: {book.isAvailableInLibrary ? 'Yes' : 'No'}</p>
+        <p className="mb-2">Discount Percent: {book.discountPercent ?? 0}%</p>
         <p className="text-lg font-semibold text-indigo-600 mb-2">${book.price.toFixed(2)}</p>
         {book.isOnSale && <p className="text-green-600 font-semibold mb-2">On Sale 🎉</p>}
         <p className="text-gray-700 mb-4">{book.description}</p>

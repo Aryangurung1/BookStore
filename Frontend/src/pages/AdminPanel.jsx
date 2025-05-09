@@ -151,6 +151,12 @@ const AdminPanel = () => {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {books.map((book) => (
               <div key={book.bookId} className="bg-white rounded-xl shadow-lg p-6 flex flex-col transition-transform hover:scale-[1.02] hover:shadow-2xl duration-200">
+                {book.isOnSale && (
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="inline-block w-3 h-3 rounded-full bg-green-500"></span>
+                    <span className="text-green-700 font-semibold">On Sale! <span role='img' aria-label='party'>🎉</span></span>
+                  </div>
+                )}
                 <div className="h-40 flex items-center justify-center mb-4 bg-gray-100 rounded">
                   <img
                     src={book && book.imageUrl ? `http://localhost:5176${book.imageUrl}` : placeholderImg}
@@ -251,31 +257,84 @@ const AdminPanel = () => {
                   <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
                     <Dialog.Panel className="bg-white rounded-xl p-6 max-w-2xl w-full shadow-xl relative">
                       <Dialog.Title className="text-2xl font-bold mb-4 flex items-center gap-2">
-                        <Eye /> {selectedBook.title}
+                        <Eye /> Book Details
                       </Dialog.Title>
                       <button onClick={() => setShowViewModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-700"><X size={22} /></button>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="h-64 overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="col-span-2 flex justify-center mb-4">
                           <img
-                            src={selectedBook && selectedBook.imageUrl ? `http://localhost:5176${selectedBook.imageUrl}` : placeholderImg}
+                            src={selectedBook.imageUrl ? `http://localhost:5176${selectedBook.imageUrl}` : placeholderImg}
                             alt={selectedBook.title}
-                            className="w-full h-full object-contain"
-                            onError={e => { e.target.onerror = null; e.target.src = placeholderImg; }}
+                            className="h-64 object-contain rounded shadow-lg"
                           />
                         </div>
-                        <div className="space-y-3">
-                          <div><h3 className="font-semibold">Author</h3><p>{selectedBook.author}</p></div>
-                          <div><h3 className="font-semibold">ISBN</h3><p>{selectedBook.isbn}</p></div>
-                          <div><h3 className="font-semibold">Description</h3><p>{selectedBook.description}</p></div>
-                          <div><h3 className="font-semibold">Genre</h3><p>{selectedBook.genre}</p></div>
-                          <div><h3 className="font-semibold">Language</h3><p>{selectedBook.language}</p></div>
-                          <div><h3 className="font-semibold">Format</h3><p>{selectedBook.format}</p></div>
-                          <div><h3 className="font-semibold">Publisher</h3><p>{selectedBook.publisher}</p></div>
-                          <div><h3 className="font-semibold">Price</h3><p>${selectedBook.price?.toFixed(2)}</p></div>
-                          <div><h3 className="font-semibold">Publication Date</h3><p>{selectedBook.publicationDate ? new Date(selectedBook.publicationDate).toLocaleDateString() : '-'}</p></div>
-                          <div><h3 className="font-semibold">Stock Quantity</h3><p>{selectedBook.stockQuantity}</p></div>
-                          <div><h3 className="font-semibold">Available in Library</h3><p>{selectedBook.isAvailableInLibrary ? 'Yes' : 'No'}</p></div>
-                          <div><h3 className="font-semibold">Discount Percent</h3><p>{selectedBook.discountPercent ?? selectedBook.DiscountPercent ?? 0}%</p></div>
+                        <div>
+                          <h3 className="font-semibold text-gray-600">Title</h3>
+                          <p className="text-lg">{selectedBook.title}</p>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-600">Author</h3>
+                          <p className="text-lg">{selectedBook.author}</p>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-600">ISBN</h3>
+                          <p>{selectedBook.isbn}</p>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-600">Genre</h3>
+                          <p>{selectedBook.genre}</p>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-600">Language</h3>
+                          <p>{selectedBook.language}</p>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-600">Format</h3>
+                          <p>{selectedBook.format}</p>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-600">Publisher</h3>
+                          <p>{selectedBook.publisher}</p>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-600">Price</h3>
+                          <p>${selectedBook.price?.toFixed(2)}</p>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-600">Stock Quantity</h3>
+                          <p>{selectedBook.stockQuantity}</p>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-600">Publication Date</h3>
+                          <p>{new Date(selectedBook.publicationDate).toLocaleDateString()}</p>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-600">Available in Library</h3>
+                          <p>{selectedBook.isAvailableInLibrary ? 'Yes' : 'No'}</p>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-600">On Sale</h3>
+                          <p>{selectedBook.isOnSale ? 'Yes' : 'No'}</p>
+                        </div>
+                        {selectedBook.isOnSale && (
+                          <>
+                            <div>
+                              <h3 className="font-semibold text-gray-600">Discount Percent</h3>
+                              <p>{selectedBook.discountPercent}%</p>
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-gray-600">Discount Period</h3>
+                              <p>
+                                {selectedBook.discountStart && selectedBook.discountEnd
+                                  ? `${new Date(selectedBook.discountStart).toLocaleDateString()} - ${new Date(selectedBook.discountEnd).toLocaleDateString()}`
+                                  : 'Not set'}
+                              </p>
+                            </div>
+                          </>
+                        )}
+                        <div className="col-span-2">
+                          <h3 className="font-semibold text-gray-600">Description</h3>
+                          <p className="whitespace-pre-wrap">{selectedBook.description}</p>
                         </div>
                       </div>
                     </Dialog.Panel>
