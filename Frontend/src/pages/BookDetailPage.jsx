@@ -12,12 +12,16 @@ const BookDetailPage = () => {
   const [error, setError] = useState('');
   const [reviewInput, setReviewInput] = useState({ rating: 5, comment: '' });
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [canReview, setCanReview] = useState(false);
+  const [editingReviewId, setEditingReviewId] = useState(null);
+  const [editInput, setEditInput] = useState({ rating: 5, comment: '' });
 
   useEffect(() => {
     fetchBook();
     fetchReviews();
     if (user?.role === 'Member') {
       checkBookmarkStatus();
+      checkCanReview();
     }
   }, [id, user]);
 
@@ -90,6 +94,17 @@ const BookDetailPage = () => {
     }
   };
 
+  const checkCanReview = async () => {
+    try {
+      const res = await axios.get(`http://localhost:5176/api/Review/can-review/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCanReview(res.data.canReview);
+    } catch (err) {
+      setCanReview(false);
+    }
+  };
+
   const handleAddReview = async (e) => {
     e.preventDefault();
     if (!user) {
@@ -110,6 +125,52 @@ const BookDetailPage = () => {
       setError('Failed to add review');
     }
   };
+
+  const handleEditClick = (review) => {
+    setEditingReviewId(review.reviewId);
+    setEditInput({ rating: review.rating, comment: review.comment });
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditInput((prev) => ({ ...prev, [name]: name === 'rating' ? parseInt(value) : value }));
+  };
+
+  const handleEditSubmit = async (reviewId) => {
+    try {
+      await axios.put(`http://localhost:5176/api/Review/${reviewId}`, {
+        rating: editInput.rating,
+        comment: editInput.comment
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setEditingReviewId(null);
+      fetchReviews();
+    } catch (err) {
+      setError('Failed to update review');
+    }
+  };
+
+  const handleEditCancel = () => {
+    setEditingReviewId(null);
+    setEditInput({ rating: 5, comment: '' });
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    if (!window.confirm('Are you sure you want to delete this review?')) return;
+    try {
+      // Admin and member both can delete (admin: any, member: own)
+      await axios.delete(`http://localhost:5176/api/Admin/reviews/${reviewId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      fetchReviews();
+    } catch (err) {
+      setError('Failed to delete review');
+    }
+  };
+
+  // Find if the logged-in member has already reviewed this book
+  const ownReview = user && user.role === 'Member' && reviews.find(r => String(r.memberId) === String(user.memberId));
 
   if (!book) return <p className="p-6">Loading...</p>;
 
@@ -155,7 +216,8 @@ const BookDetailPage = () => {
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h3 className="text-xl font-semibold mb-4">📝 Reviews</h3>
         
-        {user?.role === 'Member' && (
+        {/* Only show add review form if member hasn't reviewed this product */}
+        {user?.role === 'Member' && canReview && !ownReview && (
           <form onSubmit={handleAddReview} className="mb-6">
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">Rating</label>
@@ -184,20 +246,84 @@ const BookDetailPage = () => {
             </button>
           </form>
         )}
+        {!canReview && user?.role === 'Member' && (
+          <p className="text-gray-500 mb-6">You can only review books you have purchased and received.</p>
+        )}
 
         {reviews.length === 0 ? (
           <p className="text-gray-500">No reviews yet.</p>
         ) : (
           <ul className="space-y-4">
-            {reviews.map((review, index) => (
-              <li key={index} className="border rounded p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="font-medium">Rating: {review.rating} ⭐</p>
-                  <p className="text-sm text-gray-500">{new Date(review.createdAt).toLocaleDateString()}</p>
-                </div>
-                <p className="text-gray-700">{review.comment}</p>
-              </li>
-            ))}
+            {reviews.map((review) => {
+              const isOwnReview = user && user.role === 'Member' &&
+                !!user.memberId && !!review.memberId &&
+                String(user.memberId) === String(review.memberId);
+              // Debug log
+              // console.log('user:', user, 'review.memberId:', review.memberId, 'isOwnReview:', isOwnReview);
+              return (
+                <li key={review.reviewId} className="border rounded p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div>
+                      <p className="font-medium">Rating: {review.rating} ⭐</p>
+                      <p className="text-sm text-gray-500">By {review.memberName}</p>
+                    </div>
+                    <p className="text-sm text-gray-500">{new Date(review.createdAt).toLocaleDateString()}</p>
+                  </div>
+                  {isOwnReview && editingReviewId === review.reviewId ? (
+                    <form onSubmit={e => { e.preventDefault(); handleEditSubmit(review.reviewId); }} className="mb-2">
+                      <div className="mb-2">
+                        <label className="block text-sm font-medium mb-1">Rating</label>
+                        <select
+                          name="rating"
+                          value={editInput.rating}
+                          onChange={handleEditChange}
+                          className="w-full border rounded px-3 py-2"
+                        >
+                          {[5, 4, 3, 2, 1].map(num => (
+                            <option key={num} value={num}>{num} ⭐</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="mb-2">
+                        <label className="block text-sm font-medium mb-1">Comment</label>
+                        <textarea
+                          name="comment"
+                          value={editInput.comment}
+                          onChange={handleEditChange}
+                          className="w-full border rounded px-3 py-2"
+                          rows="2"
+                          required
+                        />
+                      </div>
+                      <div className="flex gap-2">
+                        <button type="submit" className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Save</button>
+                        <button type="button" onClick={handleEditCancel} className="bg-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-400">Cancel</button>
+                      </div>
+                    </form>
+                  ) : (
+                    <p className="text-gray-700">{review.comment}</p>
+                  )}
+                  <div className="flex gap-2 mt-2">
+                    {isOwnReview && editingReviewId !== review.reviewId && (
+                      <button
+                        onClick={() => handleEditClick(review)}
+                        className="text-blue-600 hover:underline text-sm"
+                      >
+                        Edit
+                      </button>
+                    )}
+                    {user?.role === 'Admin' && (
+                      <button
+                        onClick={() => handleDeleteReview(review.reviewId)}
+                        className="text-red-600 hover:underline text-sm"
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

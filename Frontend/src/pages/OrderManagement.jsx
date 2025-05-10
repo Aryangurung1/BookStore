@@ -7,7 +7,7 @@ const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all'); // all, pending, completed, cancelled
+  const [filter, setFilter] = useState('all'); // all, pending, fulfilled, cancelled
 
   useEffect(() => {
     fetchOrders();
@@ -52,7 +52,7 @@ const OrderManagement = () => {
       <div className="mb-6">
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-8">
-            {['all', 'pending', 'completed', 'cancelled'].map((status) => (
+            {['all', 'pending', 'fulfilled', 'cancelled'].map((status) => (
               <button
                 key={status}
                 onClick={() => setFilter(status)}
@@ -81,29 +81,22 @@ const OrderManagement = () => {
                   Placed on {new Date(order.orderDate).toLocaleDateString()}
                 </p>
                 <p className="text-sm text-gray-500">
-                  Customer: {order.memberName} (ID: {order.memberId})
+                  Customer: {order.member?.fullName} (ID: {order.member?.memberId})
                 </p>
               </div>
               <div className="text-right">
                 <p className="font-medium text-lg">
-                  ${order.totalAmount.toFixed(2)}
+                  ${order.totalPrice?.toFixed(2) || '0.00'}
                 </p>
-                <select
-                  value={order.status}
-                  onChange={(e) => handleUpdateStatus(order.orderId, e.target.value)}
-                  className={`mt-1 text-sm rounded border ${
-                    order.status === 'Cancelled' ? 'text-red-600 border-red-200' :
-                    order.status === 'Completed' ? 'text-green-600 border-green-200' :
-                    'text-blue-600 border-blue-200'
+                <span
+                  className={`inline-block px-3 py-1 text-sm rounded-full ${
+                    order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
+                    order.status === 'Fulfilled' ? 'bg-green-100 text-green-800' :
+                    'bg-blue-100 text-blue-800'
                   }`}
                 >
-                  <option value="Pending">Pending</option>
-                  <option value="Processing">Processing</option>
-                  <option value="Shipped">Shipped</option>
-                  <option value="Delivered">Delivered</option>
-                  <option value="Completed">Completed</option>
-                  <option value="Cancelled">Cancelled</option>
-                </select>
+                  {order.status}
+                </span>
               </div>
             </div>
 
@@ -116,7 +109,7 @@ const OrderManagement = () => {
                       <span className="font-medium">{item.title}</span>
                       <span className="text-gray-500 ml-2">x{item.quantity}</span>
                     </div>
-                    <span>${(item.price * item.quantity).toFixed(2)}</span>
+                    <span>${((item.unitPrice || item.price) * item.quantity).toFixed(2)}</span>
                   </li>
                 ))}
               </ul>

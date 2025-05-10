@@ -18,6 +18,7 @@ import StaffPanel from './pages/StaffPanel';
 import StaffBooks from './pages/StaffBooks';
 import StaffFulfilledOrders from './pages/StaffFulfilledOrders';
 import Announcements from './pages/Announcements';
+import AdminReviews from './pages/AdminReviews';
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -112,6 +113,14 @@ const App = () => {
           element={
             <ProtectedRoute allowedRoles={['Admin']}>
               <OrderManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/reviews"
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <AdminReviews />
             </ProtectedRoute>
           }
         />

@@ -63,7 +63,8 @@ namespace BookHeaven.Services
                     order.AppliedFivePercentDiscount = true;
                 }
 
-                if (member.Orders.Count(o => !o.IsCancelled) >= 10)
+                // Only count fulfilled orders for the 10% discount
+                if (member.Orders.Count(o => o.Status == "Fulfilled" && !o.IsCancelled) >= 10)
                 {
                     total *= 0.90m;
                     order.AppliedTenPercentDiscount = true;

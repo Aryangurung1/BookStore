@@ -84,6 +84,7 @@ namespace BookHeaven.Controllers
                 }
 
                 order.Status = "Cancelled";
+                order.IsCancelled = true;
                 await _context.SaveChangesAsync();
 
                 return Ok(new { message = "Order cancelled successfully" });
@@ -131,6 +132,60 @@ namespace BookHeaven.Controllers
             catch (UnauthorizedAccessException)
             {
                 return Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("fulfilled-count")]
+        [Authorize(Roles = "Member")]
+        public async Task<IActionResult> GetFulfilledOrderCount()
+        {
+            var memberId = GetMemberId();
+            var count = await _context.Orders.CountAsync(o => o.MemberId == memberId && o.Status == "Fulfilled" && !o.IsCancelled);
+            return Ok(new { fulfilledCount = count });
+        }
+
+        [HttpGet("all")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            try
+            {
+                var orders = await _context.Orders
+                    .Include(o => o.OrderItems)
+                    .ThenInclude(i => i.Book)
+                    .Include(o => o.Member)
+                    .Select(o => new
+                    {
+                        o.OrderId,
+                        o.OrderDate,
+                        o.TotalPrice,
+                        o.Status,
+                        o.IsCancelled,
+                        o.ClaimCode,
+                        o.AppliedFivePercentDiscount,
+                        o.AppliedTenPercentDiscount,
+                        Member = new
+                        {
+                            o.Member.MemberId,
+                            o.Member.FullName,
+                            o.Member.Email
+                        },
+                        Items = o.OrderItems.Select(i => new
+                        {
+                            i.Book.Title,
+                            i.Book.Author,
+                            i.Book.Price,
+                            unitPrice = i.UnitPrice,
+                            i.Quantity
+                        })
+                    })
+                    .ToListAsync();
+
+                return Ok(orders);
             }
             catch (Exception ex)
             {

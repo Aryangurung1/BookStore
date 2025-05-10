@@ -18,6 +18,9 @@ const Navbar = () => {
           <Link to="/" className="text-xl font-bold">
             📚 BookHeaven
           </Link>
+          <Link to="/books" className="hover:text-gray-300">
+            Browse Books
+          </Link>
           <Link to="/" className="hover:text-gray-300">
             Browse
           </Link>
@@ -35,6 +38,9 @@ const Navbar = () => {
               </Link>
               <Link to="/admin/orders" className="hover:text-gray-300">
                 📦 Orders
+              </Link>
+              <Link to="/admin/reviews" className="hover:text-gray-300">
+                📝 Reviews
               </Link>
             </>
           )}

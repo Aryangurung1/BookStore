@@ -9,5 +9,6 @@ namespace BookHeaven.DTOs.Review
         public string Comment { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public string MemberName { get; set; } = string.Empty;
+        public int MemberId { get; set; }
     }
 }

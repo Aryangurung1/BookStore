@@ -4,6 +4,8 @@ using BookHeaven.DTOs.Book;
 using BookHeaven.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using BookHeaven.Data;
 
 namespace BookHeaven.Controllers
 {
@@ -13,18 +15,23 @@ namespace BookHeaven.Controllers
     {
         private readonly IBookService _bookService;
         private readonly ILogger<BooksController> _logger;
+        private readonly AppDbContext _context;
 
-        public BooksController(IBookService bookService, ILogger<BooksController> logger)
+        public BooksController(IBookService bookService, ILogger<BooksController> logger, AppDbContext context)
         {
             _bookService = bookService;
             _logger = logger;
+            _context = context;
         }
 
         // Public (fetch all books — optional use)
         [HttpGet]
-        public async Task<IActionResult> GetAllBooks()
+        public async Task<IActionResult> GetAllBooks([FromQuery] BookQueryParameters query)
         {
-            var books = await _bookService.GetAllBooksAsync();
+            var books = await _bookService.GetBooksAsync(query);
+            var totalCount = await _context.Books.CountAsync();
+            
+            Response.Headers.Add("X-Total-Count", totalCount.ToString());
             return Ok(books);
         }
 
@@ -99,6 +106,42 @@ namespace BookHeaven.Controllers
             }
 
             return Ok(new { message = "Book deleted successfully" });
+        }
+
+        // Filter dropdown endpoints
+        [HttpGet("authors")]
+        public async Task<IActionResult> GetAuthors()
+        {
+            var authors = await _context.Books.Select(b => b.Author).Distinct().OrderBy(a => a).ToListAsync();
+            return Ok(authors);
+        }
+
+        [HttpGet("genres")]
+        public async Task<IActionResult> GetGenres()
+        {
+            var genres = await _context.Books.Select(b => b.Genre).Distinct().OrderBy(g => g).ToListAsync();
+            return Ok(genres);
+        }
+
+        [HttpGet("languages")]
+        public async Task<IActionResult> GetLanguages()
+        {
+            var languages = await _context.Books.Select(b => b.Language).Distinct().OrderBy(l => l).ToListAsync();
+            return Ok(languages);
+        }
+
+        [HttpGet("formats")]
+        public async Task<IActionResult> GetFormats()
+        {
+            var formats = await _context.Books.Select(b => b.Format).Distinct().OrderBy(f => f).ToListAsync();
+            return Ok(formats);
+        }
+
+        [HttpGet("publishers")]
+        public async Task<IActionResult> GetPublishers()
+        {
+            var publishers = await _context.Books.Select(b => b.Publisher).Distinct().OrderBy(p => p).ToListAsync();
+            return Ok(publishers);
         }
     }
 }

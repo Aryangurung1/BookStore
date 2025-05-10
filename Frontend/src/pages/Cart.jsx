@@ -14,9 +14,12 @@ const Cart = () => {
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState('');
   const [orderInfo, setOrderInfo] = useState(null);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [fulfilledOrders, setFulfilledOrders] = useState(0);
 
   useEffect(() => {
     fetchCart();
+    fetchFulfilledOrders();
     // eslint-disable-next-line
   }, []);
 
@@ -32,6 +35,17 @@ const Cart = () => {
       setError('Failed to load cart');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchFulfilledOrders = async () => {
+    try {
+      const res = await axios.get('http://localhost:5176/api/Orders/fulfilled-count', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setFulfilledOrders(res.data.fulfilledCount);
+    } catch (err) {
+      setFulfilledOrders(0);
     }
   };
 
@@ -88,6 +102,7 @@ const Cart = () => {
       setError('Your cart is empty.');
       return;
     }
+    setIsPlacingOrder(true);
     try {
       const items = cart.map(item => ({
         bookId: item.bookId,
@@ -103,6 +118,8 @@ const Cart = () => {
       setCart([]);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to place order');
+    } finally {
+      setIsPlacingOrder(false);
     }
   };
 
@@ -110,17 +127,15 @@ const Cart = () => {
 
   // Calculate totals
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const totalDiscount = cart.reduce((sum, item) => {
+  const totalBookDiscount = cart.reduce((sum, item) => {
     if (item.isOnSale && item.discountPercent > 0) {
       return sum + ((item.price * item.discountPercent / 100) * item.quantity);
     }
     return sum;
   }, 0);
-  const afterBookDiscount = subtotal - totalDiscount;
+  const afterBookDiscount = subtotal - totalBookDiscount;
   const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
   const fivePercent = totalQuantity >= 5 ? afterBookDiscount * 0.05 : 0;
-  // For demo, assume user.fulfilledOrders is available; otherwise, set to 0
-  const fulfilledOrders = user?.fulfilledOrders ?? 0;
   const tenPercent = fulfilledOrders >= 10 ? (afterBookDiscount - fivePercent) * 0.10 : 0;
   const finalTotal = afterBookDiscount - fivePercent - tenPercent;
 
@@ -213,7 +228,7 @@ const Cart = () => {
               <div>
                 <p className="text-lg font-medium">Book Discounts:</p>
               </div>
-              <p className="text-lg text-green-700">-${totalDiscount.toFixed(2)}</p>
+              <p className="text-lg text-green-700">-${totalBookDiscount.toFixed(2)}</p>
             </div>
             {fivePercent > 0 && (
               <div className="flex justify-between items-center mb-2">
@@ -226,7 +241,10 @@ const Cart = () => {
             {tenPercent > 0 && (
               <div className="flex justify-between items-center mb-2">
                 <div>
-                  <p className="text-lg font-medium">10% Loyalty Discount:</p>
+                  <p className="text-lg font-medium">
+                    10% Loyalty Discount
+                    <span className="ml-1 text-xs text-gray-500">(after 10 fulfilled orders)</span>
+                  </p>
                 </div>
                 <p className="text-lg text-green-700">-${tenPercent.toFixed(2)}</p>
               </div>
@@ -240,14 +258,16 @@ const Cart = () => {
             <button
               className="mt-4 w-full bg-gray-200 text-gray-700 py-2 px-4 rounded hover:bg-gray-300"
               onClick={handleClearCart}
+              disabled={isPlacingOrder}
             >
               Clear Cart
             </button>
             <button
-              className="mt-4 w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 font-semibold"
+              className="mt-4 w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleCheckout}
+              disabled={isPlacingOrder || cart.length === 0}
             >
-              Checkout
+              {isPlacingOrder ? 'Placing your order...' : 'Checkout'}
             </button>
             {orderInfo && (
               <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded">
@@ -261,7 +281,7 @@ const Cart = () => {
                   <p className="text-green-600">5% discount applied for 5+ books!</p>
                 )}
                 {orderInfo.appliedTenPercentDiscount && (
-                  <p className="text-green-600">10% loyalty discount applied!</p>
+                  <p className="text-green-600">10% loyalty discount applied (after 10 fulfilled orders)!</p>
                 )}
                 <p className="mt-2 text-sm text-gray-600">A bill and claim code have been sent to your email.</p>
                 <button
@@ -272,6 +292,12 @@ const Cart = () => {
                 </button>
               </div>
             )}
+            {isPlacingOrder && (
+              <div className="flex justify-center items-center mt-4">
+                <span className="loader mr-2"></span>
+                <span className="text-gray-600">Placing your order, please wait...</span>
+              </div>
+            )}
           </div>
         </>
       )}
@@ -280,3 +306,20 @@ const Cart = () => {
 };
 
 export default Cart;
+
+<style>
+{`
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #6366f1;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+`}
+</style>

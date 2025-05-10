@@ -224,24 +224,30 @@ namespace BookHeaven.Services
 
         public async Task<List<BookDto>> GetBooksAsync(BookQueryParameters query)
         {
-            var books = _context.Books.AsQueryable();
+            var books = _context.Books.Include(b => b.Reviews).AsQueryable();
 
             if (!string.IsNullOrEmpty(query.Search))
-                books = books.Where(b => b.Title.Contains(query.Search) ||
-                                         b.ISBN.Contains(query.Search) ||
-                                         b.Description.Contains(query.Search));
+            {
+                var searchLower = query.Search.ToLower();
+                books = books.Where(b => b.Title.ToLower().Contains(searchLower) ||
+                                         b.ISBN.ToLower().Contains(searchLower) ||
+                                         b.Description.ToLower().Contains(searchLower));
+            }
 
-            if (!string.IsNullOrEmpty(query.Genre))
-                books = books.Where(b => b.Genre == query.Genre);
+            if (query.Genres != null && query.Genres.Any())
+                books = books.Where(b => query.Genres.Contains(b.Genre));
 
-            if (!string.IsNullOrEmpty(query.Author))
-                books = books.Where(b => b.Author == query.Author);
+            if (query.Authors != null && query.Authors.Any())
+                books = books.Where(b => query.Authors.Contains(b.Author));
 
-            if (!string.IsNullOrEmpty(query.Language))
-                books = books.Where(b => b.Language == query.Language);
+            if (query.Languages != null && query.Languages.Any())
+                books = books.Where(b => query.Languages.Contains(b.Language));
 
-            if (!string.IsNullOrEmpty(query.Format))
-                books = books.Where(b => b.Format == query.Format);
+            if (query.Formats != null && query.Formats.Any())
+                books = books.Where(b => query.Formats.Contains(b.Format));
+
+            if (query.Publishers != null && query.Publishers.Any())
+                books = books.Where(b => query.Publishers.Contains(b.Publisher));
 
             if (query.IsOnSale.HasValue)
                 books = books.Where(b => b.IsOnSale == query.IsOnSale);
@@ -252,11 +258,24 @@ namespace BookHeaven.Services
             if (query.MaxPrice.HasValue)
                 books = books.Where(b => b.Price <= query.MaxPrice);
 
+            if (query.MinRating.HasValue)
+                books = books.Where(b => b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) >= query.MinRating : query.MinRating == 0);
+
+            if (query.IsAvailableInLibrary.HasValue)
+                books = books.Where(b => b.IsAvailableInLibrary == query.IsAvailableInLibrary);
+
+            if (query.InStock.HasValue)
+                books = books.Where(b => query.InStock.Value ? b.StockQuantity > 0 : b.StockQuantity == 0);
+
+            // Sorting
             books = query.SortBy switch
             {
                 "price" => query.SortDescending ? books.OrderByDescending(b => b.Price) : books.OrderBy(b => b.Price),
                 "date" => query.SortDescending ? books.OrderByDescending(b => b.PublicationDate) : books.OrderBy(b => b.PublicationDate),
                 "title" => query.SortDescending ? books.OrderByDescending(b => b.Title) : books.OrderBy(b => b.Title),
+                "popularity" => query.SortDescending
+                    ? books.OrderByDescending(b => b.OrderItems.Sum(oi => oi.Quantity))
+                    : books.OrderBy(b => b.OrderItems.Sum(oi => oi.Quantity)),
                 _ => books.OrderBy(b => b.Title)
             };
 
@@ -274,7 +293,14 @@ namespace BookHeaven.Services
                 IsOnSale = b.IsOnSale,
                 ImageUrl = b.ImageUrl,
                 IsAvailableInLibrary = b.IsAvailableInLibrary,
-                DiscountPercent = (int)(b.DiscountPercent ?? 0)
+                DiscountPercent = (int)(b.DiscountPercent ?? 0),
+                ISBN = b.ISBN,
+                Description = b.Description,
+                Publisher = b.Publisher,
+                PublicationDate = b.PublicationDate,
+                PageCount = b.PageCount,
+                StockQuantity = b.StockQuantity,
+                AverageRating = b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) : 0
             }).ToListAsync();
         }
     }
