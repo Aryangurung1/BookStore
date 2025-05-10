@@ -98,114 +98,311 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col">
-          <label htmlFor="title" className="mb-1 text-sm font-medium">Title</label>
-          <input id="title" type="text" name="title" value={form.title} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" required />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="author" className="mb-1 text-sm font-medium">Author</label>
-          <input id="author" type="text" name="author" value={form.author} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" required />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="genre" className="mb-1 text-sm font-medium">Genre</label>
-          <input id="genre" type="text" name="genre" value={form.genre} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="language" className="mb-1 text-sm font-medium">Language</label>
-          <input id="language" type="text" name="language" value={form.language} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="format" className="mb-1 text-sm font-medium">Format</label>
-          <input id="format" type="text" name="format" value={form.format} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="publisher" className="mb-1 text-sm font-medium">Publisher</label>
-          <input id="publisher" type="text" name="publisher" value={form.publisher} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="isbn" className="mb-1 text-sm font-medium">ISBN</label>
-          <input id="isbn" type="text" name="isbn" value={form.isbn} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="price" className="mb-1 text-sm font-medium">Price</label>
-          <input id="price" type="number" name="price" value={form.price} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" required />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="stockQuantity" className="mb-1 text-sm font-medium">Stock Quantity</label>
-          <input id="stockQuantity" type="number" name="stockQuantity" value={form.stockQuantity} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" required />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="publicationDate" className="mb-1 text-sm font-medium">Publication Date</label>
-          <input id="publicationDate" type="date" name="publicationDate" value={form.publicationDate} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="discountPercent" className="mb-1 text-sm font-medium">Discount Percent</label>
-          <input id="discountPercent" type="number" name="discountPercent" value={form.discountPercent} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" min="0" max="100" />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="discountStart" className="mb-1 text-sm font-medium">Discount Start Date</label>
-          <input id="discountStart" type="date" name="discountStart" value={form.discountStart} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" />
-        </div>
-        <div className="flex flex-col">
-          <label htmlFor="discountEnd" className="mb-1 text-sm font-medium">Discount End Date</label>
-          <input id="discountEnd" type="date" name="discountEnd" value={form.discountEnd} onChange={handleChange} className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" />
-        </div>
-        <div className="flex flex-col col-span-2">
-          <label htmlFor="Image" className="mb-1 text-sm font-medium">Book Cover Image</label>
-          <input 
-            id="Image" 
-            type="file" 
-            name="Image" 
-            onChange={handleChange} 
-            accept="image/*"
-            className="border p-2 rounded focus:ring-2 focus:ring-indigo-500" 
-            required={!isEdit}
-          />
-          {imagePreview && (
-            <img 
-              src={imagePreview} 
-              alt="Book cover preview" 
-              className="mt-2 h-40 object-contain rounded shadow border"
+    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+      
+      {/* Basic Information Section */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b">Basic Information</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title *</label>
+            <input 
+              id="title" 
+              type="text" 
+              name="title" 
+              value={form.title} 
+              onChange={handleChange} 
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+              required 
+              maxLength={200}
             />
-          )}
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="author" className="block text-sm font-medium text-gray-700">Author *</label>
+            <input 
+              id="author" 
+              type="text" 
+              name="author" 
+              value={form.author} 
+              onChange={handleChange} 
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+              required 
+              maxLength={200}
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="genre" className="block text-sm font-medium text-gray-700">Genre *</label>
+            <input 
+              id="genre" 
+              type="text" 
+              name="genre" 
+              value={form.genre} 
+              onChange={handleChange} 
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+              required 
+              maxLength={50}
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="language" className="block text-sm font-medium text-gray-700">Language *</label>
+            <input 
+              id="language" 
+              type="text" 
+              name="language" 
+              value={form.language} 
+              onChange={handleChange} 
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+              required 
+              maxLength={50}
+            />
+          </div>
         </div>
-        <label className="col-span-2 flex items-center gap-2">
-          <input type="checkbox" name="isAvailableInLibrary" checked={form.isAvailableInLibrary} onChange={handleChange} />
-          <span className="text-sm font-medium">Available in Physical Library</span>
-        </label>
-        <label className="col-span-2 flex items-center gap-2">
-          <input type="checkbox" name="isOnSale" checked={form.isOnSale} onChange={handleChange} />
-          <span className="text-sm font-medium">On Sale</span>
-        </label>
       </div>
-      <div className="flex flex-col">
-        <label htmlFor="description" className="mb-1 text-sm font-medium">Description</label>
-        <textarea
-          id="description"
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-          className="w-full border p-2 rounded h-28 focus:ring-2 focus:ring-indigo-500"
-        />
+
+      {/* Publishing Details Section */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b">Publishing Details</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="publisher" className="block text-sm font-medium text-gray-700">Publisher *</label>
+            <input 
+              id="publisher" 
+              type="text" 
+              name="publisher" 
+              value={form.publisher} 
+              onChange={handleChange} 
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+              required 
+              maxLength={200}
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="isbn" className="block text-sm font-medium text-gray-700">ISBN *</label>
+            <input 
+              id="isbn" 
+              type="text" 
+              name="isbn" 
+              value={form.isbn} 
+              onChange={handleChange} 
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+              required 
+              maxLength={13}
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="format" className="block text-sm font-medium text-gray-700">Format *</label>
+            <input 
+              id="format" 
+              type="text" 
+              name="format" 
+              value={form.format} 
+              onChange={handleChange} 
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+              required 
+              maxLength={50}
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="publicationDate" className="block text-sm font-medium text-gray-700">Publication Date *</label>
+            <input 
+              id="publicationDate" 
+              type="date" 
+              name="publicationDate" 
+              value={form.publicationDate} 
+              onChange={handleChange} 
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+              required 
+            />
+          </div>
+        </div>
       </div>
-      <div className="flex gap-4 mt-4">
-        <button
-          type="submit"
-          className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 shadow"
-        >
-          {isEdit ? 'Update Book' : 'Add Book'}
-        </button>
+
+      {/* Inventory & Pricing Section */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b">Inventory & Pricing</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price *</label>
+            <div className="relative">
+              <span className="absolute left-3 top-2 text-gray-500">$</span>
+              <input 
+                id="price" 
+                type="number" 
+                name="price" 
+                value={form.price} 
+                onChange={handleChange} 
+                className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+                required 
+                min="0.01"
+                max="99999.99"
+                step="0.01"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="stockQuantity" className="block text-sm font-medium text-gray-700">Stock Quantity *</label>
+            <input 
+              id="stockQuantity" 
+              type="number" 
+              name="stockQuantity" 
+              value={form.stockQuantity} 
+              onChange={handleChange} 
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+              required 
+              min="0"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Discount Section */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b">Discount Settings</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label htmlFor="discountPercent" className="block text-sm font-medium text-gray-700">Discount Percentage</label>
+            <div className="relative">
+              <input 
+                id="discountPercent" 
+                type="number" 
+                name="discountPercent" 
+                value={form.discountPercent} 
+                onChange={handleChange} 
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+                min="0" 
+                max="100"
+              />
+              <span className="absolute right-3 top-2 text-gray-500">%</span>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="discountStart" className="block text-sm font-medium text-gray-700">Discount Start Date</label>
+            <input 
+              id="discountStart" 
+              type="date" 
+              name="discountStart" 
+              value={form.discountStart} 
+              onChange={handleChange} 
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="discountEnd" className="block text-sm font-medium text-gray-700">Discount End Date</label>
+            <input 
+              id="discountEnd" 
+              type="date" 
+              name="discountEnd" 
+              value={form.discountEnd} 
+              onChange={handleChange} 
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Book Cover Section */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b">Book Cover</h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-center w-full">
+            <label 
+              htmlFor="Image" 
+              className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors"
+            >
+              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                {!imagePreview ? (
+                  <>
+                    <svg className="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                    </svg>
+                    <p className="mb-2 text-sm text-gray-500">
+                      <span className="font-semibold">Click to upload</span> or drag and drop
+                    </p>
+                    <p className="text-xs text-gray-500">PNG, JPG or JPEG (MAX. 800x400px)</p>
+                  </>
+                ) : (
+                  <img 
+                    src={imagePreview} 
+                    alt="Book cover preview" 
+                    className="max-h-56 object-contain rounded shadow-sm"
+                  />
+                )}
+              </div>
+              <input 
+                id="Image" 
+                type="file" 
+                name="Image" 
+                onChange={handleChange} 
+                accept="image/*"
+                className="hidden" 
+                required={!isEdit}
+              />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {/* Description Section */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b">Description</h3>
+        <div className="space-y-2">
+          <textarea
+            id="description"
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors min-h-[120px]"
+            placeholder="Enter book description..."
+            required
+            maxLength={2000}
+          />
+        </div>
+      </div>
+
+      {/* Availability Section */}
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b">Availability</h3>
+        <div className="space-y-4">
+          <label className="flex items-center space-x-3">
+            <input 
+              type="checkbox" 
+              name="isAvailableInLibrary" 
+              checked={form.isAvailableInLibrary} 
+              onChange={handleChange}
+              className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" 
+            />
+            <span className="text-sm font-medium text-gray-700">Available in Physical Library</span>
+          </label>
+          <label className="flex items-center space-x-3">
+            <input 
+              type="checkbox" 
+              name="isOnSale" 
+              checked={form.isOnSale} 
+              onChange={handleChange}
+              className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" 
+            />
+            <span className="text-sm font-medium text-gray-700">On Sale</span>
+          </label>
+        </div>
+      </div>
+
+      {/* Form Actions */}
+      <div className="flex gap-4 justify-end">
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
-            className="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300"
+            className="px-6 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
           >
             Cancel
           </button>
         )}
+        <button
+          type="submit"
+          className="px-6 py-2.5 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+        >
+          {isEdit ? 'Update Book' : 'Add Book'}
+        </button>
       </div>
     </form>
   );

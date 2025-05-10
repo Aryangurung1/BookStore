@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { motion } from 'framer-motion';
+import { Package, Calendar, User, DollarSign, Loader2 } from 'lucide-react';
 
 const StaffFulfilledOrders = () => {
   const { token } = useAuth();
@@ -28,60 +30,115 @@ const StaffFulfilledOrders = () => {
     }
   };
 
-  if (loading) return <div className="p-6">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="h-12 w-12 text-indigo-600 animate-spin" />
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6">✅ Fulfilled Orders</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      {orders.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">No fulfilled orders found.</div>
-      ) : (
-        <div className="space-y-6">
-          {orders.map((order) => (
-            <div key={order.orderId} className="bg-white rounded-lg shadow-lg p-6">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="font-semibold text-lg">Order #{order.orderId}</h3>
-                  <p className="text-sm text-gray-500">Placed on {new Date(order.orderDate).toLocaleDateString()}</p>
-                  <p className="text-sm text-gray-500">Member: {order.member.fullName} (ID: {order.member.memberId}, Email: {order.member.email})</p>
+    <div className="min-h-screen bg-gray-50 pt-4 md:pt-8 px-10 max-w-7xl mx-auto">
+      {/* Header Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-8"
+      >
+        <div>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Fulfilled Orders</h2>
+          <p className="text-gray-600">View and manage all fulfilled book orders</p>
+        </div>
+      </motion.div>
+
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded"
+        >
+          {error}
+        </motion.div>
+      )}
+
+      {/* Orders List */}
+      <div className="space-y-6">
+        {orders.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-12 bg-white rounded-lg shadow-sm"
+          >
+            <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-500 text-lg">No fulfilled orders found</p>
+          </motion.div>
+        ) : (
+          orders.map((order, index) => (
+            <motion.div
+              key={order.orderId}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
+            >
+              <div className="p-6">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-lg text-gray-900">
+                        Order #{order.orderId}
+                      </h3>
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-green-50 text-green-700 border border-green-200">
+                        <Package className="h-4 w-4" />
+                        Fulfilled
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-500">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        {new Date(order.orderDate).toLocaleDateString()}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <User className="h-4 w-4" />
+                        {order.member?.fullName}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <DollarSign className="h-4 w-4" />
+                        ${order.totalPrice?.toFixed(2)}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-medium text-lg">${order.totalPrice?.toFixed(2)}</p>
-                  <p className="text-green-600 text-sm">{order.status}</p>
-                </div>
-              </div>
-              <div className="border-t border-b py-4 my-4">
-                <h4 className="font-medium mb-2">Items:</h4>
-                <ul className="space-y-2">
-                  {order.items.map((item, idx) => (
-                    <li key={idx} className="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
-                      <div className="flex items-center gap-3">
+
+                <div className="border-t border-gray-100 pt-4">
+                  <h4 className="font-medium text-gray-900 mb-3">Order Items</h4>
+                  <div className="space-y-3">
+                    {order.items?.map((item, idx) => (
+                      <div key={idx} className="flex items-start gap-4 p-3 bg-gray-50 rounded-lg">
                         <img
-                          src={item.book.imageUrl ? `http://localhost:5176${item.book.imageUrl}` : '/placeholder-book.jpg'}
-                          alt={item.book.title}
-                          className="h-14 w-10 object-contain rounded border"
+                          src={item.book?.imageUrl ? `http://localhost:5176${item.book.imageUrl}` : '/placeholder-book.jpg'}
+                          alt={item.book?.title || 'Book'}
+                          className="h-16 w-12 object-cover rounded border"
                           onError={e => { e.target.onerror = null; e.target.src = '/placeholder-book.jpg'; }}
                         />
-                        <div>
-                          <div className="font-medium">{item.book.title}</div>
-                          <div className="text-sm text-gray-500">By {item.book.author}</div>
-                          <div className="text-xs text-gray-400">ISBN: {item.book.isbn}</div>
+                        <div className="flex-1">
+                          <h5 className="font-medium text-gray-900">{item.book?.title}</h5>
+                          <p className="text-sm text-gray-500">By {item.book?.author}</p>
+                          <div className="mt-1 flex items-center justify-between text-sm">
+                            <span className="text-gray-600">Qty: {item.quantity}</span>
+                            <span className="text-gray-900">${((item.unitPrice || 0) * item.quantity).toFixed(2)}</span>
+                          </div>
                         </div>
                       </div>
-                      <div className="flex flex-col md:items-end">
-                        <span>Qty: {item.quantity}</span>
-                        <span className="text-sm">Unit: ${item.unitPrice?.toFixed(2)}</span>
-                        <span className="text-sm font-semibold">Total: ${(item.unitPrice * item.quantity).toFixed(2)}</span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            </motion.div>
+          ))
+        )}
+      </div>
     </div>
   );
 };
