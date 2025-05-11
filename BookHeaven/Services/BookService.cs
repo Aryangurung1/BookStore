@@ -235,19 +235,19 @@ namespace BookHeaven.Services
             }
 
             if (query.Genres != null && query.Genres.Any())
-                books = books.Where(b => query.Genres.Contains(b.Genre));
+                books = books.Where(b => query.Genres.Select(g => g.ToLower()).Contains(b.Genre.ToLower()));
 
             if (query.Authors != null && query.Authors.Any())
-                books = books.Where(b => query.Authors.Contains(b.Author));
+                books = books.Where(b => query.Authors.Select(a => a.ToLower()).Contains(b.Author.ToLower()));
 
             if (query.Languages != null && query.Languages.Any())
-                books = books.Where(b => query.Languages.Contains(b.Language));
+                books = books.Where(b => query.Languages.Select(l => l.ToLower()).Contains(b.Language.ToLower()));
 
             if (query.Formats != null && query.Formats.Any())
-                books = books.Where(b => query.Formats.Contains(b.Format));
+                books = books.Where(b => query.Formats.Select(f => f.ToLower()).Contains(b.Format.ToLower()));
 
             if (query.Publishers != null && query.Publishers.Any())
-                books = books.Where(b => query.Publishers.Contains(b.Publisher));
+                books = books.Where(b => query.Publishers.Select(p => p.ToLower()).Contains(b.Publisher.ToLower()));
 
             if (query.IsOnSale.HasValue)
                 books = books.Where(b => b.IsOnSale == query.IsOnSale);

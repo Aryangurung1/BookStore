@@ -1,13 +1,25 @@
+using Microsoft.AspNetCore.Mvc;
+
 namespace BookHeaven.DTOs.Book
 {
     public class BookQueryParameters
     {
         public string? Search { get; set; }
         public List<string>? Genres { get; set; }
+        [FromQuery(Name = "genres[]")]
+        public List<string>? GenresAlt { get; set; }
         public List<string>? Authors { get; set; }
+        [FromQuery(Name = "authors[]")]
+        public List<string>? AuthorsAlt { get; set; }
         public List<string>? Languages { get; set; }
+        [FromQuery(Name = "languages[]")]
+        public List<string>? LanguagesAlt { get; set; }
         public List<string>? Formats { get; set; }
+        [FromQuery(Name = "formats[]")]
+        public List<string>? FormatsAlt { get; set; }
         public List<string>? Publishers { get; set; }
+        [FromQuery(Name = "publishers[]")]
+        public List<string>? PublishersAlt { get; set; }
         public bool? IsOnSale { get; set; }
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using BookHeaven.Data;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BookHeaven.Controllers
 {
@@ -28,6 +30,17 @@ namespace BookHeaven.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllBooks([FromQuery] BookQueryParameters query)
         {
+            // Merge alternate and main lists for all multi-value filters
+            query.Languages = (query.Languages ?? new List<string>()).Concat(query.LanguagesAlt ?? new List<string>()).ToList();
+            query.Authors = (query.Authors ?? new List<string>()).Concat(query.AuthorsAlt ?? new List<string>()).ToList();
+            query.Genres = (query.Genres ?? new List<string>()).Concat(query.GenresAlt ?? new List<string>()).ToList();
+            query.Formats = (query.Formats ?? new List<string>()).Concat(query.FormatsAlt ?? new List<string>()).ToList();
+            query.Publishers = (query.Publishers ?? new List<string>()).Concat(query.PublishersAlt ?? new List<string>()).ToList();
+            _logger.LogInformation("Languages: {Languages}", string.Join(",", query.Languages ?? new List<string>()));
+            _logger.LogInformation("Authors: {Authors}", string.Join(",", query.Authors ?? new List<string>()));
+            _logger.LogInformation("Genres: {Genres}", string.Join(",", query.Genres ?? new List<string>()));
+            _logger.LogInformation("Formats: {Formats}", string.Join(",", query.Formats ?? new List<string>()));
+            _logger.LogInformation("Publishers: {Publishers}", string.Join(",", query.Publishers ?? new List<string>()));
             var books = await _bookService.GetBooksAsync(query);
             var totalCount = await _context.Books.CountAsync();
             

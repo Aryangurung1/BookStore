@@ -120,42 +120,67 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
           </div>
           <div className="space-y-2">
             <label htmlFor="author" className="block text-sm font-medium text-gray-700">Author *</label>
-            <input 
+            <select 
               id="author" 
-              type="text" 
               name="author" 
               value={form.author} 
               onChange={handleChange} 
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
-              required 
-              maxLength={200}
-            />
+              required
+            >
+              <option value="">Select an author</option>
+              <option value="J.K. Rowling">J.K. Rowling</option>
+              <option value="Stephen King">Stephen King</option>
+              <option value="Agatha Christie">Agatha Christie</option>
+              <option value="George R.R. Martin">George R.R. Martin</option>
+              <option value="Jane Austen">Jane Austen</option>
+              <option value="Ernest Hemingway">Ernest Hemingway</option>
+              <option value="William Shakespeare">William Shakespeare</option>
+              <option value="Mark Twain">Mark Twain</option>
+              <option value="Charles Dickens">Charles Dickens</option>
+              <option value="F. Scott Fitzgerald">F. Scott Fitzgerald</option>
+            </select>
           </div>
           <div className="space-y-2">
             <label htmlFor="genre" className="block text-sm font-medium text-gray-700">Genre *</label>
-            <input 
+            <select 
               id="genre" 
-              type="text" 
               name="genre" 
               value={form.genre} 
               onChange={handleChange} 
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
-              required 
-              maxLength={50}
-            />
+              required
+            >
+              <option value="">Select a genre</option>
+              <option value="Fiction">Fiction</option>
+              <option value="Non-Fiction">Non-Fiction</option>
+              <option value="Mystery">Mystery</option>
+              <option value="Science Fiction">Science Fiction</option>
+              <option value="Biography">Biography</option>
+            </select>
           </div>
           <div className="space-y-2">
             <label htmlFor="language" className="block text-sm font-medium text-gray-700">Language *</label>
-            <input 
+            <select 
               id="language" 
-              type="text" 
               name="language" 
               value={form.language} 
               onChange={handleChange} 
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
-              required 
-              maxLength={50}
-            />
+              required
+            >
+              <option value="">Select a language</option>
+              <option value="English">English</option>
+              <option value="Spanish">Spanish</option>
+              <option value="French">French</option>
+              <option value="German">German</option>
+              <option value="Italian">Italian</option>
+              <option value="Nepali">Nepali</option>
+              <option value="Russian">Russian</option>
+              <option value="Japanese">Japanese</option>
+              <option value="Chinese">Chinese</option>
+              <option value="Arabic">Arabic</option>
+            </select>
           </div>
         </div>
       </div>
@@ -166,16 +191,26 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label htmlFor="publisher" className="block text-sm font-medium text-gray-700">Publisher *</label>
-            <input 
+            <select 
               id="publisher" 
-              type="text" 
               name="publisher" 
               value={form.publisher} 
               onChange={handleChange} 
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
-              required 
-              maxLength={200}
-            />
+              required
+            >
+              <option value="">Select a publisher</option>
+              <option value="Penguin Random House">Penguin Random House</option>
+              <option value="HarperCollins">HarperCollins</option>
+              <option value="Simon & Schuster">Simon & Schuster</option>
+              <option value="Hachette Book Group">Hachette Book Group</option>
+              <option value="Macmillan Publishers">Macmillan Publishers</option>
+              <option value="Scholastic">Scholastic</option>
+              <option value="Bloomsbury">Bloomsbury</option>
+              <option value="Oxford University Press">Oxford University Press</option>
+              <option value="Cambridge University Press">Cambridge University Press</option>
+              <option value="Wiley">Wiley</option>
+            </select>
           </div>
           <div className="space-y-2">
             <label htmlFor="isbn" className="block text-sm font-medium text-gray-700">ISBN *</label>
@@ -192,16 +227,26 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
           </div>
           <div className="space-y-2">
             <label htmlFor="format" className="block text-sm font-medium text-gray-700">Format *</label>
-            <input 
+            <select 
               id="format" 
-              type="text" 
               name="format" 
               value={form.format} 
               onChange={handleChange} 
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
-              required 
-              maxLength={50}
-            />
+              required
+            >
+              <option value="">Select a format</option>
+              <option value="Hardcover">Hardcover</option>
+              <option value="Paperback">Paperback</option>
+              <option value="E-Book">E-Book</option>
+              <option value="Audiobook">Audiobook</option>
+              <option value="Mass Market Paperback">Mass Market Paperback</option>
+              <option value="Large Print">Large Print</option>
+              <option value="Board Book">Board Book</option>
+              <option value="Spiral Bound">Spiral Bound</option>
+              <option value="Comic Book">Comic Book</option>
+              <option value="Magazine">Magazine</option>
+            </select>
           </div>
           <div className="space-y-2">
             <label htmlFor="publicationDate" className="block text-sm font-medium text-gray-700">Publication Date *</label>
