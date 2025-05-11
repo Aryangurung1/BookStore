@@ -106,10 +106,12 @@ const AdminBookManagement = () => {
     setCurrentPage(pageNumber);
   };
 
+  const isValidDate = (d) => d && !isNaN(new Date(d).getTime());
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white/90 rounded-2xl shadow-2xl border border-gray-100 p-0 md:p-8">
+        <div className="bg-white/90 rounded-2xl shadow-2xl border border-gray-100 p-0 md:p-8 flex flex-col max-h-[90vh]">
           <div className="mb-8 flex items-center space-x-4">
             <div className="p-3 bg-indigo-100 rounded-xl">
               <BookOpen className="w-7 h-7 text-indigo-600" />
@@ -178,7 +180,7 @@ const AdminBookManagement = () => {
             </div>
           ) : (
             <>
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 flex-1 min-h-0 overflow-y-auto">
                 {currentBooks.map((book) => (
                   <div
                     key={book.bookId}
@@ -310,7 +312,7 @@ const AdminBookManagement = () => {
                     leaveFrom="opacity-100 scale-100"
                     leaveTo="opacity-0 scale-95"
                   >
-                    <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl sm:p-6">
+                    <Dialog.Panel className="relative transform overflow-hidden rounded-2xl bg-white p-8 text-left shadow-2xl border max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                       <div className="absolute top-0 right-0 pt-4 pr-4">
                         <button
                           type="button"
@@ -367,7 +369,7 @@ const AdminBookManagement = () => {
                     leaveFrom="opacity-100 scale-100"
                     leaveTo="opacity-0 scale-95"
                   >
-                    <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl sm:p-6">
+                    <Dialog.Panel className="relative transform overflow-hidden rounded-2xl bg-white p-8 text-left shadow-2xl border max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                       <div className="absolute top-0 right-0 pt-4 pr-4">
                         <button
                           type="button"
@@ -424,7 +426,7 @@ const AdminBookManagement = () => {
                     leaveFrom="opacity-100 scale-100"
                     leaveTo="opacity-0 scale-95"
                   >
-                    <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6">
+                    <Dialog.Panel className="relative transform overflow-hidden rounded-2xl bg-white p-8 text-left shadow-2xl border max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                       <div className="absolute top-0 right-0 pt-4 pr-4">
                         <button
                           type="button"
@@ -522,7 +524,7 @@ const AdminBookManagement = () => {
                                       <div>
                                         <p className="text-sm text-gray-500">Discount Period</p>
                                         <p className="text-sm font-medium">
-                                          {selectedBook.discountStart && selectedBook.discountEnd
+                                          {isValidDate(selectedBook.discountStart) && isValidDate(selectedBook.discountEnd)
                                             ? `${new Date(selectedBook.discountStart).toLocaleDateString()} - ${new Date(selectedBook.discountEnd).toLocaleDateString()}`
                                             : 'Not specified'}
                                         </p>
@@ -575,7 +577,7 @@ const AdminBookManagement = () => {
                     leaveFrom="opacity-100 scale-100"
                     leaveTo="opacity-0 scale-95"
                   >
-                    <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                    <Dialog.Panel className="relative transform overflow-hidden rounded-2xl bg-white p-8 text-left shadow-2xl border max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                       <div className="sm:flex sm:items-start">
                         <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
                           <Trash2 className="h-6 w-6 text-red-600" aria-hidden="true" />

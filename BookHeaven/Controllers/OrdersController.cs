@@ -118,11 +118,12 @@ namespace BookHeaven.Controllers
                         o.Status,
                         Items = o.OrderItems.Select(i => new
                         {
-                            i.Book.Title,
-                            i.Book.Author,
-                            i.Book.Price,
+                            bookId = i.Book.BookId,
+                            title = i.Book.Title,
+                            author = i.Book.Author,
+                            price = i.Book.Price,
                             unitPrice = i.UnitPrice,
-                            i.Quantity
+                            quantity = i.Quantity
                         })
                     })
                     .ToListAsync();

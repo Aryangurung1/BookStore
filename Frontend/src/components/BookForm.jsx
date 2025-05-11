@@ -98,10 +98,11 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
+      
       
       {/* Basic Information Section */}
-      <div className="mb-8">
+      <div className="mb-8 bg-gray-50 rounded-xl p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b">Basic Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
@@ -160,7 +161,7 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
       </div>
 
       {/* Publishing Details Section */}
-      <div className="mb-8">
+      <div className="mb-8 bg-gray-50 rounded-xl p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b">Publishing Details</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
@@ -218,7 +219,7 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
       </div>
 
       {/* Inventory & Pricing Section */}
-      <div className="mb-8">
+      <div className="mb-8 bg-gray-50 rounded-xl p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b">Inventory & Pricing</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
@@ -256,7 +257,7 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
       </div>
 
       {/* Discount Section */}
-      <div className="mb-8">
+      <div className="mb-8 bg-gray-50 rounded-xl p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b">Discount Settings</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
@@ -301,7 +302,7 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
       </div>
 
       {/* Book Cover Section */}
-      <div className="mb-8">
+      <div className="mb-8 bg-gray-50 rounded-xl p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b">Book Cover</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-center w-full">
@@ -343,7 +344,7 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
       </div>
 
       {/* Description Section */}
-      <div className="mb-8">
+      <div className="mb-8 bg-gray-50 rounded-xl p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b">Description</h3>
         <div className="space-y-2">
           <textarea
@@ -360,7 +361,7 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
       </div>
 
       {/* Availability Section */}
-      <div className="mb-8">
+      <div className="mb-8 bg-gray-50 rounded-xl p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b">Availability</h3>
         <div className="space-y-4">
           <label className="flex items-center space-x-3">
@@ -387,19 +388,19 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
       </div>
 
       {/* Form Actions */}
-      <div className="flex gap-4 justify-end">
+      <div className="flex gap-4 justify-end mt-8">
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+            className="px-6 py-2.5 border border-gray-300 text-gray-500 font-medium rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
           >
             Cancel
           </button>
         )}
         <button
           type="submit"
-          className="px-6 py-2.5 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+          className="px-8 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white font-semibold rounded-md shadow hover:from-indigo-700 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all text-base"
         >
           {isEdit ? 'Update Book' : 'Add Book'}
         </button>

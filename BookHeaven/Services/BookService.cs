@@ -300,7 +300,9 @@ namespace BookHeaven.Services
                 PublicationDate = b.PublicationDate,
                 PageCount = b.PageCount,
                 StockQuantity = b.StockQuantity,
-                AverageRating = b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) : 0
+                AverageRating = b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) : 0,
+                DiscountStart = b.DiscountStart,
+                DiscountEnd = b.DiscountEnd
             }).ToListAsync();
         }
     }

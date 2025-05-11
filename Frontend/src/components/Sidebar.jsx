@@ -42,7 +42,7 @@ const Sidebar = () => {
       ];
     } else if (user?.role === 'Staff') {
       return [
-        { path: '/staff', label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
+        { path: '/staff', label: 'Fulfill Order', icon: <LayoutDashboard className="w-5 h-5" /> },
         { path: '/staff/books', label: 'Books', icon: <BookOpen className="w-5 h-5" /> },
         { path: '/staff/fulfilled-orders', label: 'Fulfilled Orders', icon: <CheckCircle className="w-5 h-5" /> },
       ];

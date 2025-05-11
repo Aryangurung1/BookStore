@@ -42,7 +42,7 @@ const StaffPanel = () => {
         className="mb-8"
       >
         <div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Staff Dashboard</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Fullfill Order</h2>
           <p className="text-gray-600">Manage and fulfill book orders</p>
         </div>
       </motion.div>

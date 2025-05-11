@@ -2,6 +2,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { Dialog, Transition } from '@headlessui/react';
+import { Trash2 } from 'lucide-react';
 
 const UserManagement = () => {
   const { token } = useAuth();
@@ -18,6 +20,8 @@ const UserManagement = () => {
   });
   const [showStaffModal, setShowStaffModal] = useState(false);
   const staffModalRef = useRef(null);
+  const [showDeleteMemberModal, setShowDeleteMemberModal] = useState(false);
+  const [memberToDelete, setMemberToDelete] = useState(null);
 
   useEffect(() => {
     if (activeTab === 'members') {
@@ -116,22 +120,24 @@ const UserManagement = () => {
       setError('Invalid member ID');
       return;
     }
-    
-    const confirmDelete = window.confirm(
-      'Are you sure you want to delete this member? This will also delete all their orders, cart items, reviews, and bookmarks. This action cannot be undone.'
-    );
-    
-    if (!confirmDelete) return;
-    
+    const member = members.find(m => m.memberId === memberId);
+    setMemberToDelete(member);
+    setShowDeleteMemberModal(true);
+  };
+
+  const confirmDeleteMember = async () => {
+    if (!memberToDelete) return;
     try {
-      await axios.delete(`http://localhost:5176/api/Admin/members/${memberId}`, {
+      await axios.delete(`http://localhost:5176/api/Admin/members/${memberToDelete.memberId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      // Remove the deleted member from the list
-      setMembers(prev => prev.filter(member => member.memberId !== memberId));
+      setMembers(prev => prev.filter(member => member.memberId !== memberToDelete.memberId));
       setError('');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to delete member');
+    } finally {
+      setShowDeleteMemberModal(false);
+      setMemberToDelete(null);
     }
   };
 
@@ -151,7 +157,7 @@ const UserManagement = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 py-10">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white/90 rounded-2xl shadow-2xl border border-gray-100 p-0 md:p-8 max-h-[80vh]">
+        <div className="bg-white/90 rounded-2xl shadow-2xl border border-gray-100 p-0 md:p-8 flex flex-col max-h-[80vh]">
           <div className="mb-8 flex items-center space-x-4">
             <div className="p-3 bg-indigo-100 rounded-xl">
               <svg className="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -201,60 +207,131 @@ const UserManagement = () => {
 
           {/* Members List */}
           {activeTab === 'members' && (
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 flex flex-col overflow-hidden">
-              <h2 className="text-xl font-bold text-indigo-700 mb-4 flex items-center gap-2">
-                <svg className="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                Members List
-              </h2>
-              <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
-                {members.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <svg className="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                    <p className="text-gray-500 text-lg">No members found</p>
-                  </div>
-                ) : (
-                  members.map((member, idx) => (
-                    <div 
-                      key={member.memberId || idx} 
-                      className="flex items-center bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 px-4 py-3 group relative"
-                    >
-                      <div className="bg-indigo-100 w-12 h-12 flex items-center justify-center rounded-full mr-4">
-                        <span className="text-indigo-600 font-bold text-xl">
-                          {member.fullName?.charAt(0).toUpperCase() || "M"}
-                        </span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-lg text-gray-900 mb-0.5 truncate">{member.fullName}</h3>
-                        <div className="flex items-center text-gray-500 text-sm gap-2">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                          </svg>
-                          <span className="truncate">{member.email}</span>
-                        </div>
-                        <div className="flex items-center text-gray-400 text-xs mt-1 gap-1">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          Joined: {new Date(member.joinDate).toLocaleDateString()}
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => handleDeleteMember(member.memberId)}
-                        className="ml-4 p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors duration-200"
-                        title="Delete member"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
-                      <div className="absolute left-0 right-0 bottom-0 h-px bg-gradient-to-r from-indigo-100 via-gray-100 to-indigo-100 opacity-60 group-last:hidden" />
+            <>
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 flex flex-col flex-1 min-h-0 overflow-hidden">
+                <h2 className="text-xl font-bold text-indigo-700 mb-4 flex items-center gap-2">
+                  <svg className="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                  Members List
+                </h2>
+                <div className="space-y-4 flex-1 min-h-0 overflow-y-auto pr-2">
+                  {members.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-12 text-center">
+                      <svg className="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                      <p className="text-gray-500 text-lg">No members found</p>
                     </div>
-                  ))
-                )}
+                  ) : (
+                    members.map((member, idx) => (
+                      <div 
+                        key={member.memberId || idx} 
+                        className="flex items-center bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 px-4 py-3 group relative"
+                      >
+                        <div className="bg-indigo-100 w-12 h-12 flex items-center justify-center rounded-full mr-4">
+                          <span className="text-indigo-600 font-bold text-xl">
+                            {member.fullName?.charAt(0).toUpperCase() || "M"}
+                          </span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-lg text-gray-900 mb-0.5 truncate">{member.fullName}</h3>
+                          <div className="flex items-center text-gray-500 text-sm gap-2">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <span className="truncate">{member.email}</span>
+                          </div>
+                          <div className="flex items-center text-gray-400 text-xs mt-1 gap-1">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Joined: {new Date(member.joinDate).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleDeleteMember(member.memberId)}
+                          className="ml-4 p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors duration-200"
+                          title="Delete member"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                        <div className="absolute left-0 right-0 bottom-0 h-px bg-gradient-to-r from-indigo-100 via-gray-100 to-indigo-100 opacity-60 group-last:hidden" />
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
-            </div>
+              {/* Delete Member Confirmation Modal */}
+              <Transition.Root show={showDeleteMemberModal} as={React.Fragment}>
+                <Dialog as="div" className="relative z-50" onClose={() => setShowDeleteMemberModal(false)}>
+                  <Transition.Child
+                    as={React.Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" />
+                  </Transition.Child>
+                  <div className="fixed inset-0 z-50 overflow-y-auto">
+                    <div className="flex min-h-full items-center justify-center p-4 text-center">
+                      <Transition.Child
+                        as={React.Fragment}
+                        enter="ease-out duration-300"
+                        enterFrom="opacity-0 scale-95"
+                        enterTo="opacity-100 scale-100"
+                        leave="ease-in duration-200"
+                        leaveFrom="opacity-100 scale-100"
+                        leaveTo="opacity-0 scale-95"
+                      >
+                        <Dialog.Panel className="relative transform overflow-hidden rounded-2xl bg-white p-8 text-left shadow-2xl border max-w-md w-full">
+                          <div className="sm:flex sm:items-start">
+                            <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                              <Trash2 className="h-6 w-6 text-red-600" aria-hidden="true" />
+                            </div>
+                            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                              <Dialog.Title as="h3" className="text-lg font-bold leading-6 text-gray-900">
+                                Delete Member
+                              </Dialog.Title>
+                              <div className="mt-2">
+                                <p className="text-sm text-gray-500 mb-2">
+                                  Are you sure you want to delete this member? This will also delete all their orders, cart items, reviews, and bookmarks. This action cannot be undone.
+                                </p>
+                                {memberToDelete && (
+                                  <div className="bg-gray-50 rounded p-3 text-gray-700 text-sm">
+                                    <strong>Name:</strong> {memberToDelete.fullName}<br />
+                                    <strong>Email:</strong> {memberToDelete.email}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                            <button
+                              type="button"
+                              className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                              onClick={confirmDeleteMember}
+                            >
+                              Delete
+                            </button>
+                            <button
+                              type="button"
+                              className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+                              onClick={() => setShowDeleteMemberModal(false)}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </Dialog.Panel>
+                      </Transition.Child>
+                    </div>
+                  </div>
+                </Dialog>
+              </Transition.Root>
+            </>
           )}
 
           {/* Staff List */}

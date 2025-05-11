@@ -46,7 +46,7 @@ const OrderManagement = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 py-10">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white/90 rounded-2xl shadow-2xl border border-gray-100 p-0 md:p-8">
+        <div className="bg-white/90 rounded-2xl shadow-2xl border border-gray-100 p-0 md:p-8 flex flex-col max-h-[80vh]">
           <div className="mb-8 flex items-center space-x-4">
             <div className="p-3 bg-indigo-100 rounded-xl">
               <ShoppingCart className="w-7 h-7 text-indigo-600" />
@@ -86,7 +86,7 @@ const OrderManagement = () => {
               <Loader2 className="animate-spin h-10 w-10 text-indigo-600" />
             </div>
           ) : (
-            <div className="space-y-8">
+            <div className="space-y-8 flex-1 min-h-0 overflow-y-auto">
               {filteredOrders.map((order) => (
                 <div key={order.orderId} className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 px-6 py-6 group relative">
                   <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-2">

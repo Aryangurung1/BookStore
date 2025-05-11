@@ -167,5 +167,78 @@ namespace BookHeaven.Controllers
             await _context.SaveChangesAsync();
             return Ok(new { message = "Review deleted successfully" });
         }
+
+        [HttpGet("dashboard/genres")]
+        public async Task<IActionResult> GetGenreDistribution()
+        {
+            var genres = await _context.Books
+                .GroupBy(b => b.Genre)
+                .Select(g => new { Genre = g.Key, Count = g.Count() })
+                .ToListAsync();
+
+            return Ok(genres);
+        }
+
+        [HttpGet("dashboard/order-status")]
+        public async Task<IActionResult> GetOrderStatusDistribution()
+        {
+            var statuses = await _context.Orders
+                .GroupBy(o => o.Status)
+                .Select(g => new { Status = g.Key, Count = g.Count() })
+                .ToListAsync();
+
+            return Ok(statuses);
+        }
+
+        [HttpGet("dashboard/monthly-sales")]
+        public async Task<IActionResult> GetMonthlySales()
+        {
+            var sixMonthsAgo = DateTime.UtcNow.AddMonths(-5);
+            var sales = await _context.Orders
+                .Where(o => o.OrderDate >= sixMonthsAgo)
+                .GroupBy(o => new { Month = o.OrderDate.Month, Year = o.OrderDate.Year })
+                .Select(g => new { 
+                    Month = g.Key.Month,
+                    Year = g.Key.Year,
+                    Total = g.Sum(o => o.TotalAmount)
+                })
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
+                .ToListAsync();
+
+            return Ok(sales);
+        }
+
+        [HttpGet("dashboard/user-registrations")]
+        public async Task<IActionResult> GetUserRegistrations()
+        {
+            var sixMonthsAgo = DateTime.UtcNow.AddMonths(-5);
+            
+            var memberRegistrations = await _context.Members
+                .Where(m => m.JoinDate >= sixMonthsAgo)
+                .GroupBy(m => new { Month = m.JoinDate.Month, Year = m.JoinDate.Year })
+                .Select(g => new {
+                    Month = g.Key.Month,
+                    Year = g.Key.Year,
+                    Count = g.Count()
+                })
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
+                .ToListAsync();
+
+            var staffRegistrations = await _context.Staffs
+                .Where(s => s.JoinDate >= sixMonthsAgo)
+                .GroupBy(s => new { Month = s.JoinDate.Month, Year = s.JoinDate.Year })
+                .Select(g => new {
+                    Month = g.Key.Month,
+                    Year = g.Key.Year,
+                    Count = g.Count()
+                })
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
+                .ToListAsync();
+
+            return Ok(new { Members = memberRegistrations, Staff = staffRegistrations });
+        }
     }
 }

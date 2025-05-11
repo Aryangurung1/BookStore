@@ -29,6 +29,8 @@ const AdminAnnouncementManagement = () => {
     endTime: '',
     type: 'info'
   });
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
 
   useEffect(() => {
     fetchAnnouncements();
@@ -214,8 +216,7 @@ const AdminAnnouncementManagement = () => {
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{announcement.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">{announcement.message}</p>
+                  <button onClick={() => { setSelectedAnnouncement(announcement); setShowDetailModal(true); }} className="text-lg font-semibold text-indigo-700 hover:underline focus:outline-none mb-2 text-left w-full">{announcement.title}</button>
 
                   <div className="border-t border-gray-100 pt-4 mt-4">
                     <div className="flex justify-between text-sm text-gray-500">
@@ -263,7 +264,7 @@ const AdminAnnouncementManagement = () => {
                     leaveFrom="opacity-100 scale-100"
                     leaveTo="opacity-0 scale-95"
                   >
-                    <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                    <Dialog.Panel className="relative transform overflow-hidden rounded-2xl bg-white p-8 text-left shadow-2xl border max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                       <div className="absolute top-0 right-0 pt-4 pr-4">
                         <button
                           type="button"
@@ -287,15 +288,15 @@ const AdminAnnouncementManagement = () => {
                         <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 sm:mx-0 sm:h-10 sm:w-10">
                           <Plus className="h-6 w-6 text-indigo-600" aria-hidden="true" />
                         </div>
-                        <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                        <div className="mt-4 sm:mt-0 sm:ml-4 sm:text-left w-full">
                           <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
                             Add New Announcement
                           </Dialog.Title>
                           <div className="mt-4">
-                            <form onSubmit={handleSubmit} className="space-y-4">
+                            <form onSubmit={handleSubmit} className="space-y-6">
                               <div>
                                 <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                                  Title
+                                  Title *
                                 </label>
                                 <input
                                   type="text"
@@ -303,14 +304,14 @@ const AdminAnnouncementManagement = () => {
                                   id="title"
                                   value={formData.title}
                                   onChange={handleInputChange}
-                                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                  className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors placeholder-gray-400"
                                   required
                                 />
                               </div>
 
                               <div>
                                 <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-                                  Message
+                                  Message *
                                 </label>
                                 <textarea
                                   name="message"
@@ -318,7 +319,7 @@ const AdminAnnouncementManagement = () => {
                                   rows={4}
                                   value={formData.message}
                                   onChange={handleInputChange}
-                                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                  className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors placeholder-gray-400"
                                   required
                                 />
                               </div>
@@ -334,7 +335,7 @@ const AdminAnnouncementManagement = () => {
                                     id="startTime"
                                     value={formData.startTime}
                                     onChange={handleInputChange}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors placeholder-gray-400"
                                     required
                                   />
                                 </div>
@@ -349,7 +350,7 @@ const AdminAnnouncementManagement = () => {
                                     id="endTime"
                                     value={formData.endTime}
                                     onChange={handleInputChange}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors placeholder-gray-400"
                                     required
                                   />
                                 </div>
@@ -364,7 +365,7 @@ const AdminAnnouncementManagement = () => {
                                   id="type"
                                   value={formData.type}
                                   onChange={handleInputChange}
-                                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                  className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors placeholder-gray-400"
                                 >
                                   <option value="info">Info</option>
                                   <option value="warning">Warning</option>
@@ -433,19 +434,26 @@ const AdminAnnouncementManagement = () => {
                     leaveFrom="opacity-100 scale-100"
                     leaveTo="opacity-0 scale-95"
                   >
-                    <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+                    <Dialog.Panel className="relative transform overflow-hidden rounded-2xl bg-white p-8 text-left shadow-2xl border max-w-md w-full">
                       <div className="sm:flex sm:items-start">
                         <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
                           <Trash2 className="h-6 w-6 text-red-600" aria-hidden="true" />
                         </div>
                         <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                          <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+                          <Dialog.Title as="h3" className="text-lg font-bold leading-6 text-gray-900">
                             Delete Announcement
                           </Dialog.Title>
                           <div className="mt-2">
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-gray-500 mb-2">
                               Are you sure you want to delete this announcement? This action cannot be undone.
                             </p>
+                            {announcements.find(a => a.announcementId === deleteId) && (
+                              <div className="bg-gray-50 rounded p-3 text-gray-700 text-sm">
+                                <strong>Title:</strong> {announcements.find(a => a.announcementId === deleteId).title}
+                                <br />
+                                <strong>Message:</strong> {announcements.find(a => a.announcementId === deleteId).message}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -471,6 +479,64 @@ const AdminAnnouncementManagement = () => {
               </div>
             </Dialog>
           </Transition.Root>
+
+          {showDetailModal && selectedAnnouncement && (
+            <Transition.Root show={showDetailModal} as={Fragment}>
+              <Dialog as="div" className="relative z-50" onClose={() => setShowDetailModal(false)}>
+                <Transition.Child
+                  as={Fragment}
+                  enter="ease-out duration-300"
+                  enterFrom="opacity-0"
+                  enterTo="opacity-100"
+                  leave="ease-in duration-200"
+                  leaveFrom="opacity-100"
+                  leaveTo="opacity-0"
+                >
+                  <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" />
+                </Transition.Child>
+                <div className="fixed inset-0 z-50 overflow-y-auto">
+                  <div className="flex min-h-full items-center justify-center p-4 text-center">
+                    <Transition.Child
+                      as={Fragment}
+                      enter="ease-out duration-300"
+                      enterFrom="opacity-0 scale-95"
+                      enterTo="opacity-100 scale-100"
+                      leave="ease-in duration-200"
+                      leaveFrom="opacity-100 scale-100"
+                      leaveTo="opacity-0 scale-95"
+                    >
+                      <Dialog.Panel className="relative transform overflow-hidden rounded-2xl bg-white p-8 text-left shadow-2xl border max-w-lg w-full">
+                        <Dialog.Title as="h3" className="text-2xl font-bold text-indigo-700 mb-4">
+                          {selectedAnnouncement.title}
+                        </Dialog.Title>
+                        <div className="mb-4">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getTypeBadgeClass(selectedAnnouncement.type)}`}>
+                            {getTypeLabel(selectedAnnouncement.type)}
+                          </span>
+                        </div>
+                        <div className="mb-4 text-gray-700 whitespace-pre-line">
+                          {selectedAnnouncement.message}
+                        </div>
+                        <div className="flex justify-between text-sm text-gray-500 border-t pt-4">
+                          <span>Start: {new Date(selectedAnnouncement.startTime).toLocaleDateString()}</span>
+                          <span>End: {new Date(selectedAnnouncement.endTime).toLocaleDateString()}</span>
+                        </div>
+                        <div className="mt-6 flex justify-end">
+                          <button
+                            type="button"
+                            className="px-6 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                            onClick={() => setShowDetailModal(false)}
+                          >
+                            Close
+                          </button>
+                        </div>
+                      </Dialog.Panel>
+                    </Transition.Child>
+                  </div>
+                </div>
+              </Dialog>
+            </Transition.Root>
+          )}
         </div>
       </div>
     </div>

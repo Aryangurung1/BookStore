@@ -19,6 +19,8 @@ namespace BookHeaven.Models
         [Required]
         public string Position { get; set; } = string.Empty;
 
+        public DateTime JoinDate { get; set; } = DateTime.UtcNow;
+
         public ICollection<ProcessedOrder> ProcessedOrders { get; set; } = new List<ProcessedOrder>();
     }
 }
