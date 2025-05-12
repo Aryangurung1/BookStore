@@ -21,5 +21,8 @@ namespace BookHeaven.DTOs.Book
         public DateTime? DiscountStart { get; set; }
         public DateTime? DiscountEnd { get; set; }
         public IFormFile? Image { get; set; }
+        public bool IsAwardWinner { get; set; } = false;
+        public bool IsBestseller { get; set; } = false;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

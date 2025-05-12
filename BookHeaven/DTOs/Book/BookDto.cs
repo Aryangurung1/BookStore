@@ -22,5 +22,8 @@ namespace BookHeaven.DTOs.Book
         public int PageCount { get; set; }
         public double AverageRating { get; set; }
         public bool IsAvailableInLibrary { get; set; }
+        public bool IsAwardWinner { get; set; }
+        public bool IsBestseller { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

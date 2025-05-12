@@ -63,7 +63,10 @@ namespace BookHeaven.Services
                 StockQuantity = dto.StockQuantity,
                 IsAvailableInLibrary = dto.IsAvailableInLibrary,
                 ImageUrl = imageUrl,
-                DiscountPercent = dto.DiscountPercent ?? 0
+                DiscountPercent = dto.DiscountPercent ?? 0,
+                IsAwardWinner = dto.IsAwardWinner,
+                IsBestseller = dto.IsBestseller,
+                CreatedAt = dto.CreatedAt
             };
 
             _logger.LogInformation("Created book object with ISBN: {ISBN}", book.ISBN);
@@ -117,7 +120,10 @@ namespace BookHeaven.Services
                 IsOnSale = book.IsOnSale,
                 DiscountPercent = (int)(book.DiscountPercent ?? 0),
                 DiscountStart = book.DiscountStart,
-                DiscountEnd = book.DiscountEnd
+                DiscountEnd = book.DiscountEnd,
+                IsAwardWinner = book.IsAwardWinner,
+                IsBestseller = book.IsBestseller,
+                CreatedAt = book.CreatedAt
             };
         }
 
@@ -148,7 +154,10 @@ namespace BookHeaven.Services
                 IsOnSale = b.IsOnSale,
                 DiscountPercent = (int)(b.DiscountPercent ?? 0),
                 DiscountStart = b.DiscountStart,
-                DiscountEnd = b.DiscountEnd
+                DiscountEnd = b.DiscountEnd,
+                IsAwardWinner = b.IsAwardWinner,
+                IsBestseller = b.IsBestseller,
+                CreatedAt = b.CreatedAt
             }).ToList();
         }
 
@@ -176,6 +185,9 @@ namespace BookHeaven.Services
             book.IsOnSale = dto.IsOnSale;
             book.DiscountStart = dto.DiscountStart;
             book.DiscountEnd = dto.DiscountEnd;
+            book.IsAwardWinner = dto.IsAwardWinner;
+            book.IsBestseller = dto.IsBestseller;
+            book.CreatedAt = dto.CreatedAt;
 
             // Handle image update if provided
             if (dto.Image != null && dto.Image.Length > 0)
@@ -267,6 +279,35 @@ namespace BookHeaven.Services
             if (query.InStock.HasValue)
                 books = books.Where(b => query.InStock.Value ? b.StockQuantity > 0 : b.StockQuantity == 0);
 
+            if (query.IsAwardWinner.HasValue && query.IsAwardWinner.Value)
+                books = books.Where(b => b.IsAwardWinner);
+
+            if (query.IsBestseller.HasValue && query.IsBestseller.Value)
+                books = books.Where(b => b.IsBestseller);
+
+            if (query.NewReleases.HasValue && query.NewReleases.Value)
+            {
+                var threeMonthsAgo = DateTime.UtcNow.AddMonths(-3);
+                books = books.Where(b => b.PublicationDate >= threeMonthsAgo && b.PublicationDate <= DateTime.UtcNow);
+            }
+
+            if (query.NewArrivals.HasValue && query.NewArrivals.Value)
+            {
+                var now = DateTime.UtcNow;
+                var firstOfMonth = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+                books = books.Where(b => b.PublicationDate >= firstOfMonth && b.PublicationDate <= now);
+            }
+
+            if (query.ComingSoon.HasValue && query.ComingSoon.Value)
+            {
+                books = books.Where(b => b.PublicationDate > DateTime.UtcNow);
+            }
+
+            if (query.Deals.HasValue && query.Deals.Value)
+            {
+                books = books.Where(b => b.IsOnSale || (b.DiscountPercent ?? 0) > 0);
+            }
+
             // Sorting
             books = query.SortBy switch
             {
@@ -302,7 +343,10 @@ namespace BookHeaven.Services
                 StockQuantity = b.StockQuantity,
                 AverageRating = b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) : 0,
                 DiscountStart = b.DiscountStart,
-                DiscountEnd = b.DiscountEnd
+                DiscountEnd = b.DiscountEnd,
+                IsAwardWinner = b.IsAwardWinner,
+                IsBestseller = b.IsBestseller,
+                CreatedAt = b.CreatedAt
             }).ToListAsync();
         }
     }

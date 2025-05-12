@@ -30,5 +30,11 @@ namespace BookHeaven.DTOs.Book
         public bool SortDescending { get; set; }
         public int Page { get; set; } = 1;
         public int PageSize { get; set; } = 10;
+        public bool? IsAwardWinner { get; set; }
+        public bool? IsBestseller { get; set; }
+        public bool? NewReleases { get; set; }
+        public bool? NewArrivals { get; set; }
+        public bool? ComingSoon { get; set; }
+        public bool? Deals { get; set; }
     }
 }

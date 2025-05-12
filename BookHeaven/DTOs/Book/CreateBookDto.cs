@@ -54,5 +54,9 @@ namespace BookHeaven.DTOs.Book
         public IFormFile Image { get; set; } = null!;
 
         public decimal? DiscountPercent { get; set; }
+
+        public bool IsAwardWinner { get; set; } = false;
+        public bool IsBestseller { get; set; } = false;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
