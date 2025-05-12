@@ -1,6 +1,9 @@
 import Select from 'react-select';
 import qs from 'qs';
 import axios from 'axios';
+import { HubConnectionBuilder } from '@microsoft/signalr';
+import { useEffect } from 'react';
+import { useToast } from 'react-react-toast';
 
 const selectMenuPortalStyles = {
   menuPortal: base => ({ ...base, zIndex: 9999 })
@@ -70,4 +73,26 @@ const res = await axios.get(`http://localhost:5176/api/books`, {
   headers: { Authorization: `Bearer ${token}` },
   params,
   paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
-}); 
+});
+
+const { addToast } = useToast();
+
+useEffect(() => {
+  // SignalR connection for real-time order notifications
+  const connection = new HubConnectionBuilder()
+    .withUrl('http://localhost:5176/orderHub')
+    .withAutomaticReconnect()
+    .build();
+
+  connection.start()
+    .then(() => {
+      connection.on('OrderPlaced', (message) => {
+        addToast(message, 'info');
+      });
+    })
+    .catch(err => console.error('SignalR Connection Error:', err));
+
+  return () => {
+    connection.stop();
+  };
+}, [addToast]); 

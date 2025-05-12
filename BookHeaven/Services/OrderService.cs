@@ -3,6 +3,8 @@ using BookHeaven.DTOs.Order;
 using BookHeaven.Models;
 using BookHeaven.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using BookHeaven.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace BookHeaven.Services
 {
@@ -11,12 +13,14 @@ namespace BookHeaven.Services
         private readonly AppDbContext _context;
         private readonly IBroadcastService _broadcastService;
         private readonly IEmailService _emailService;
+        private readonly IHubContext<OrderHub> _orderHubContext;
 
-        public OrderService(AppDbContext context, IBroadcastService broadcastService, IEmailService emailService)
+        public OrderService(AppDbContext context, IBroadcastService broadcastService, IEmailService emailService, IHubContext<OrderHub> orderHubContext)
         {
             _context = context;
             _broadcastService = broadcastService;
             _emailService = emailService;
+            _orderHubContext = orderHubContext;
         }
 
           public async Task<Order> PlaceOrderAsync(int memberId, CreateOrderDto dto)
@@ -86,6 +90,10 @@ namespace BookHeaven.Services
                 var bookTitles = order.OrderItems.Select(i => _context.Books.FirstOrDefault(b => b.BookId == i.BookId)?.Title).ToList();
                 var message = $"New Order Placed! {bookTitles.Count} books ordered: {string.Join(", ", bookTitles)}";
                 await _broadcastService.CreateMessageAsync(message);
+
+                // Broadcast to all clients
+                var orderTitles = string.Join(", ", order.OrderItems.Select(oi => oi.Book.Title));
+                await _orderHubContext.Clients.All.SendAsync("OrderPlaced", $"Someone just ordered: {orderTitles}");
 
                 return order;
             }

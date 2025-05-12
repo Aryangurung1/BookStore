@@ -27,7 +27,9 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
     isOnSale: false,
     discountStart: '',
     discountEnd: '',
-    Image: null
+    Image: null,
+    isAwardWinner: false,
+    isBestseller: false
   });
   const [imagePreview, setImagePreview] = useState(initialData?.imageUrl ? `http://localhost:5176${initialData.imageUrl}` : '');
 
@@ -42,7 +44,9 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
         discountStart: formatDateForInput(initialData.discountStart),
         discountEnd: formatDateForInput(initialData.discountEnd),
         discountPercent: (initialData.discountPercent ?? '').toString(),
-        Image: null // Don't set the file, just show preview
+        Image: null, // Don't set the file, just show preview
+        isAwardWinner: initialData.isAwardWinner ?? initialData.IsAwardWinner ?? false,
+        isBestseller: initialData.isBestseller ?? initialData.IsBestseller ?? false
       });
       setImagePreview(initialData.imageUrl ? `http://localhost:5176${initialData.imageUrl}` : '');
     }
@@ -259,6 +263,30 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
               required 
             />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="isAwardWinner" className="block text-sm font-medium text-gray-700">Award Winner</label>
+            <input
+              id="isAwardWinner"
+              name="isAwardWinner"
+              type="checkbox"
+              checked={form.isAwardWinner || false}
+              onChange={handleChange}
+              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+            />
+            <span className="ml-2 text-gray-600 text-sm">Mark as Award Winner</span>
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="isBestseller" className="block text-sm font-medium text-gray-700">Bestseller</label>
+            <input
+              id="isBestseller"
+              name="isBestseller"
+              type="checkbox"
+              checked={form.isBestseller || false}
+              onChange={handleChange}
+              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+            />
+            <span className="ml-2 text-gray-600 text-sm">Mark as Bestseller</span>
           </div>
         </div>
       </div>

@@ -26,6 +26,9 @@ import { ToastProvider } from './context/ToastContext';
 import Sidebar from './components/Sidebar';
 import AdminBookManagement from './pages/AdminBookManagement';
 import AdminAnnouncementManagement from './pages/AdminAnnouncementManagement';
+import { HubConnectionBuilder } from '@microsoft/signalr';
+import { useEffect } from 'react';
+import OrderNotificationListener from './components/OrderNotificationListener';
 
 const App = () => {
   const { user, loading } = useAuth();
@@ -43,6 +46,7 @@ const App = () => {
     <CartProvider>
       <BookmarkProvider>
         <ToastProvider>
+          <OrderNotificationListener />
           <div className="min-h-screen bg-gray-50">
             {(!isAdminOrStaff && !isLoginOrRegister) && <Navbar />}
             {user && isAdminOrStaff && <Sidebar />}

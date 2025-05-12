@@ -1,6 +1,10 @@
 {
   "Files": [
     {
+      "Id": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\09fddf5c-9951-4396-8f32-ae57d88fb49c_book12.png",
+      "PackagePath": "staticwebassets\\uploads\\09fddf5c-9951-4396-8f32-ae57d88fb49c_book12.png"
+    },
+    {
       "Id": "E:\\Servlets\\BookStore\\BookHeaven\\wwwroot\\uploads\\0ab5f9f0-7fef-48a1-b75b-f2c0c882759d_18144590.jpg",
       "PackagePath": "staticwebassets\\uploads\\0ab5f9f0-7fef-48a1-b75b-f2c0c882759d_18144590.jpg"
     },

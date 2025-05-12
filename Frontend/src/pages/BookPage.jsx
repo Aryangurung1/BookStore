@@ -49,6 +49,13 @@ const BooksPage = () => {
   const [sortBy, setSortBy] = useState('title');
   const [sortDescending, setSortDescending] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [isAwardWinner, setIsAwardWinner] = useState(false);
+  const [isBestseller, setIsBestseller] = useState(false);
+  const [newReleases, setNewReleases] = useState(false);
+  const [newArrivals, setNewArrivals] = useState(false);
+  const [comingSoon, setComingSoon] = useState(false);
+  const [deals, setDeals] = useState(false);
+  const [resetFilters, setResetFilters] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -83,7 +90,31 @@ const BooksPage = () => {
   useEffect(() => {
     fetchBooks();
     if (user && user.role === 'Member') fetchBookmarks();
-  }, [query, currentPage, user, selectedAuthors, selectedGenres, selectedLanguages, selectedFormats, selectedPublishers, priceRange, ratingRange, inStock, inLibrary, sortBy, sortDescending]);
+  }, [query, currentPage, user, selectedAuthors, selectedGenres, selectedLanguages, selectedFormats, selectedPublishers, priceRange, ratingRange, inStock, inLibrary, sortBy, sortDescending, isAwardWinner, isBestseller, newReleases, newArrivals, comingSoon, deals]);
+
+  useEffect(() => {
+    if (resetFilters) {
+      setQuery('');
+      setPriceRange([0, 1000]);
+      setRatingRange([0, 5]);
+      setSelectedLanguages([]);
+      setSelectedAuthors([]);
+      setSelectedGenres([]);
+      setSelectedFormats([]);
+      setSelectedPublishers([]);
+      setSortBy('title');
+      setSortDescending(false);
+      setCurrentPage(1);
+      setIsAwardWinner(false);
+      setIsBestseller(false);
+      setNewReleases(false);
+      setNewArrivals(false);
+      setComingSoon(false);
+      setDeals(false);
+      setResetFilters(false);
+      fetchBooks();
+    }
+  }, [resetFilters]);
 
   const fetchBookmarks = async () => {
     try {
@@ -100,24 +131,38 @@ const BooksPage = () => {
   const fetchBooks = async () => {
     try {
       setLoading(true);
-      const params = {
-        search: query,
-        minPrice: priceRange[0],
-        maxPrice: priceRange[1],
-        minRating: ratingRange[0],
-        inStock: inStock ? true : undefined,
-        isAvailableInLibrary: inLibrary ? true : undefined,
-        sortBy,
-        sortDescending,
-        page: currentPage,
-        pageSize: 9
-      };
-      if (selectedAuthors.length > 0) params.authors = selectedAuthors.map(a => a.value);
-      if (selectedGenres.length > 0) params.genres = selectedGenres.map(g => g.value);
-      if (selectedLanguages.length > 0) params.languages = selectedLanguages.map(l => l.value);
-      if (selectedFormats.length > 0) params.formats = selectedFormats.map(f => f.value);
-      if (selectedPublishers.length > 0) params.publishers = selectedPublishers.map(p => p.value);
-
+      const params = new URLSearchParams();
+      params.append('search', query);
+      params.append('minPrice', priceRange[0]);
+      params.append('maxPrice', priceRange[1]);
+      params.append('minRating', ratingRange[0]);
+      params.append('sortBy', sortBy);
+      params.append('sortDescending', sortDescending);
+      params.append('page', currentPage);
+      params.append('pageSize', 9);
+      if (inStock) params.append('inStock', true);
+      if (inLibrary) params.append('isAvailableInLibrary', true);
+      if (isAwardWinner) params.append('isAwardWinner', true);
+      if (isBestseller) params.append('isBestseller', true);
+      if (newReleases) params.append('newReleases', true);
+      if (newArrivals) params.append('newArrivals', true);
+      if (comingSoon) params.append('comingSoon', true);
+      if (deals) params.append('deals', true);
+      if (selectedLanguages.length > 0) {
+        selectedLanguages.forEach(lang => params.append('languages[]', lang));
+      }
+      if (selectedAuthors.length > 0) {
+        selectedAuthors.forEach(author => params.append('authors[]', author));
+      }
+      if (selectedGenres.length > 0) {
+        selectedGenres.forEach(genre => params.append('genres[]', genre));
+      }
+      if (selectedFormats.length > 0) {
+        selectedFormats.forEach(format => params.append('formats[]', format));
+      }
+      if (selectedPublishers.length > 0) {
+        selectedPublishers.forEach(publisher => params.append('publishers[]', publisher));
+      }
       const res = await axios.get(`http://localhost:5176/api/books`, {
         headers: { Authorization: `Bearer ${token}` },
         params
@@ -223,6 +268,112 @@ const BooksPage = () => {
               placeholder="Search books by title, ISBN, or description..."
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm transition-all duration-200"
             />
+          </div>
+        </motion.div>
+
+        {/* Category Tabs Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => {
+                setIsAwardWinner(!isAwardWinner);
+                setIsBestseller(false);
+                setNewReleases(false);
+                setNewArrivals(false);
+                setComingSoon(false);
+                setDeals(false);
+                fetchBooks();
+              }}
+              className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                isAwardWinner ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              Award Winners
+            </button>
+            <button
+              onClick={() => {
+                setIsBestseller(!isBestseller);
+                setIsAwardWinner(false);
+                setNewReleases(false);
+                setNewArrivals(false);
+                setComingSoon(false);
+                setDeals(false);
+                fetchBooks();
+              }}
+              className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                isBestseller ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              Bestsellers
+            </button>
+            <button
+              onClick={() => {
+                setNewReleases(!newReleases);
+                setIsAwardWinner(false);
+                setIsBestseller(false);
+                setNewArrivals(false);
+                setComingSoon(false);
+                setDeals(false);
+                fetchBooks();
+              }}
+              className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                newReleases ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              New Releases
+            </button>
+            <button
+              onClick={() => {
+                setNewArrivals(!newArrivals);
+                setIsAwardWinner(false);
+                setIsBestseller(false);
+                setNewReleases(false);
+                setComingSoon(false);
+                setDeals(false);
+                fetchBooks();
+              }}
+              className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                newArrivals ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              New Arrivals
+            </button>
+            <button
+              onClick={() => {
+                setComingSoon(!comingSoon);
+                setIsAwardWinner(false);
+                setIsBestseller(false);
+                setNewReleases(false);
+                setNewArrivals(false);
+                setDeals(false);
+                fetchBooks();
+              }}
+              className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                comingSoon ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              Coming Soon
+            </button>
+            <button
+              onClick={() => {
+                setDeals(!deals);
+                setIsAwardWinner(false);
+                setIsBestseller(false);
+                setNewReleases(false);
+                setNewArrivals(false);
+                setComingSoon(false);
+                fetchBooks();
+              }}
+              className={`px-4 py-2 rounded-lg transition-colors duration-200 ${
+                deals ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              Deals
+            </button>
           </div>
         </motion.div>
 
@@ -399,6 +550,12 @@ const BooksPage = () => {
                     </label>
                   </div>
                 </div>
+                <button
+                  onClick={() => setResetFilters(true)}
+                  className="text-indigo-600 hover:text-indigo-800"
+                >
+                  Reset Filters
+                </button>
               </motion.div>
             )}
           </AnimatePresence>

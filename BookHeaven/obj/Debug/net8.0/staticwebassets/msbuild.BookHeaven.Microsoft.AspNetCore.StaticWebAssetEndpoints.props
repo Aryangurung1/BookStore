@@ -1,5 +1,17 @@
 ﻿<Project>
   <ItemGroup>
+    <StaticWebAssetEndpoint Include="_content/BookHeaven/uploads/09fddf5c-9951-4396-8f32-ae57d88fb49c_book12.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\09fddf5c-9951-4396-8f32-ae57d88fb49c_book12.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-/bPENApvACRjlPo5Wr98T1OmYiMOb2SZcXJ83Xi46N4="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"17626"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022/bPENApvACRjlPo5Wr98T1OmYiMOb2SZcXJ83Xi46N4=\u0022"},{"Name":"Last-Modified","Value":"Mon, 12 May 2025 00:38:43 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/BookHeaven/uploads/09fddf5c-9951-4396-8f32-ae57d88fb49c_book12.x7uolongb4.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\09fddf5c-9951-4396-8f32-ae57d88fb49c_book12.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"x7uolongb4"},{"Name":"integrity","Value":"sha256-/bPENApvACRjlPo5Wr98T1OmYiMOb2SZcXJ83Xi46N4="},{"Name":"label","Value":"_content/BookHeaven/uploads/09fddf5c-9951-4396-8f32-ae57d88fb49c_book12.png"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"17626"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022/bPENApvACRjlPo5Wr98T1OmYiMOb2SZcXJ83Xi46N4=\u0022"},{"Name":"Last-Modified","Value":"Mon, 12 May 2025 00:38:43 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/BookHeaven/uploads/0ab5f9f0-7fef-48a1-b75b-f2c0c882759d_18144590.jpg">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\0ab5f9f0-7fef-48a1-b75b-f2c0c882759d_18144590.jpg'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
