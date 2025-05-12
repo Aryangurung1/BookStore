@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  bookheaven-api:
+    build:
+      context: ./BookHeaven
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres-db;Port=5432;Database=bookheaven;Username=postgres;Password=admin
+    depends_on:
+      - postgres-db
+    command: >
+      sh -c "dotnet ef database update --no-build --project BookHeaven.csproj && dotnet BookHeaven.dll"
+
+  postgres-db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: bookheaven
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

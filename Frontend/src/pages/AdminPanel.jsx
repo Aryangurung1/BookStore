@@ -15,6 +15,7 @@ import {
   LineElement,
 } from 'chart.js';
 import { Pie, Doughnut, Bar, Line } from 'react-chartjs-2';
+import { LineChart, PieChart, Cell, BarChart, XAxis, YAxis, ResponsiveContainer, Tooltip as RechartsTooltip } from 'recharts';
 
 ChartJS.register(
   CategoryScale,
@@ -30,20 +31,24 @@ ChartJS.register(
 
 const AdminPanel = () => {
   const { token } = useAuth();
-  const [stats, setStats] = useState({
-    totalStaff: 0,
-    totalMembers: 0,
-    totalBooks: 0,
-    totalOrders: 0
-  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [chartData, setChartData] = useState({
-    genres: null,
-    orderStatus: null,
-    monthlySales: null,
-    userRegistrations: null
+  const [metrics, setMetrics] = useState({
+    totalBooks: 0,
+    totalMembers: 0,
+    totalOrders: 0,
+    fulfilledOrders: 0,
+    cancelledOrders: 0,
+    totalSales: 0,
+    outOfStock: 0,
+    onSale: 0,
+    pendingOrders: 0
   });
+  const [salesData, setSalesData] = useState([]);
+  const [ordersStatusData, setOrdersStatusData] = useState([]);
+  const [bestsellers, setBestsellers] = useState([]);
+  const [genreData, setGenreData] = useState([]);
+  const [newMembersData, setNewMembersData] = useState([]);
 
   const chartOptions = {
     responsive: true,
@@ -74,145 +79,108 @@ const AdminPanel = () => {
   useEffect(() => {
     const fetchAllData = async () => {
       try {
+        // Fetch all data in parallel
         const [
-          staffRes,
-          memberRes,
           bookRes,
-          orderRes,
+          orderSummaryRes,
           genresRes,
           orderStatusRes,
           monthlySalesRes,
-          userRegistrationsRes
+          newMembersRes,
+          topBestsellersRes,
+          totalSalesRes
         ] = await Promise.all([
-          axios.get('http://localhost:5176/api/Admin/staffs', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('http://localhost:5176/api/Admin/members', { headers: { Authorization: `Bearer ${token}` } }),
           axios.get('http://localhost:5176/api/books', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('http://localhost:5176/api/Admin/orders', { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get('http://localhost:5176/api/Admin/dashboard/order-summary', { headers: { Authorization: `Bearer ${token}` } }),
           axios.get('http://localhost:5176/api/Admin/dashboard/genres', { headers: { Authorization: `Bearer ${token}` } }),
           axios.get('http://localhost:5176/api/Admin/dashboard/order-status', { headers: { Authorization: `Bearer ${token}` } }),
           axios.get('http://localhost:5176/api/Admin/dashboard/monthly-sales', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('http://localhost:5176/api/Admin/dashboard/user-registrations', { headers: { Authorization: `Bearer ${token}` } })
+          axios.get('http://localhost:5176/api/Admin/dashboard/new-members', { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get('http://localhost:5176/api/Admin/dashboard/top-bestsellers', { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get('http://localhost:5176/api/Admin/dashboard/total-sales', { headers: { Authorization: `Bearer ${token}` } })
         ]);
 
-        // Log the responses to verify data
-        console.log('Genres Data:', genresRes.data);
-        console.log('Order Status Data:', orderStatusRes.data);
-        console.log('Monthly Sales Data:', monthlySalesRes.data);
-        console.log('User Registrations Data:', userRegistrationsRes.data);
+        // Metrics from books
+        const books = bookRes.data || [];
+        const onSale = books.filter(b => b.isOnSale).length;
+        const outOfStock = books.filter(b => b.stockQuantity <= 5).length;
 
-        setStats({
-          totalStaff: staffRes.data.length,
-          totalMembers: memberRes.data.length,
-          totalBooks: bookRes.data.length,
-          totalOrders: orderRes.data.length
+        // Order summary from new endpoint
+        const { totalOrders, fulfilledOrders, cancelledOrders } = orderSummaryRes.data;
+        const { totalSales } = totalSalesRes.data;
+
+        // Set all metrics
+        setMetrics({
+          totalBooks: books.length,
+          totalMembers: 0, // TODO: Add member count endpoint
+          totalOrders,
+          fulfilledOrders,
+          cancelledOrders,
+          totalSales: totalSales || 0,
+          outOfStock,
+          onSale,
+          pendingOrders: 0 // TODO: Add pending orders endpoint
         });
 
-        // Process chart data
-        const genreData = {
-          labels: genresRes.data.map(g => g.genre),
-          datasets: [{
-            data: genresRes.data.map(g => g.count),
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.8)',
-              'rgba(54, 162, 235, 0.8)',
-              'rgba(255, 206, 86, 0.8)',
-              'rgba(75, 192, 192, 0.8)',
-              'rgba(153, 102, 255, 0.8)',
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-            ],
-            borderWidth: 1,
-          }]
-        };
+        // Sales Over Time (Line Chart)
+        const salesDataArr = (monthlySalesRes.data || []).map(s => ({
+          date: `${s.year}-${String(s.month).padStart(2, '0')}`,
+          sales: s.total
+        }));
+        setSalesData(salesDataArr);
 
-        // Log processed chart data
-        console.log('Processed Genre Data:', genreData);
+        // Orders by Status (Pie Chart)
+        const ordersStatusArr = (orderStatusRes.data || []).map(s => ({
+          status: s.status,
+          value: s.count
+        }));
+        setOrdersStatusData(ordersStatusArr);
 
-        const orderStatusData = {
-          labels: orderStatusRes.data.map(s => s.status),
-          datasets: [{
-            data: orderStatusRes.data.map(s => s.count),
-            backgroundColor: [
-              'rgba(75, 192, 192, 0.8)',
-              'rgba(255, 206, 86, 0.8)',
-              'rgba(255, 99, 132, 0.8)',
-              'rgba(54, 162, 235, 0.8)',
-            ],
-            borderColor: [
-              'rgba(75, 192, 192, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-            ],
-            borderWidth: 1,
-          }]
-        };
+        // Top 5 Bestselling Books (Bar Chart)
+        const bestsellersArr = (topBestsellersRes.data || []).map(b => ({
+          title: b.title,
+          sales: b.quantitySold
+        }));
+        setBestsellers(bestsellersArr);
 
-        // Log processed order status data
-        console.log('Processed Order Status Data:', orderStatusData);
+        // Books by Genre (Pie Chart)
+        const genreArr = (genresRes.data || [])
+          .filter(g => g.genre)
+          .map(g => ({
+            genre: g.genre.charAt(0).toUpperCase() + g.genre.slice(1),
+            value: g.count
+          }));
+        setGenreData(genreArr);
 
-        const monthlySalesData = {
-          labels: monthlySalesRes.data.map(s => new Date(s.year, s.month - 1).toLocaleString('default', { month: 'short' })),
-          datasets: [{
-            label: 'Sales ($)',
-            data: monthlySalesRes.data.map(s => s.total),
-            backgroundColor: 'rgba(54, 162, 235, 0.8)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1,
-          }]
-        };
-
-        // Log processed monthly sales data
-        console.log('Processed Monthly Sales Data:', monthlySalesData);
-
-        const userRegistrationData = {
-          labels: userRegistrationsRes.data.Members.map(m => new Date(m.year, m.month - 1).toLocaleString('default', { month: 'short' })),
-          datasets: [
-            {
-              label: 'New Members',
-              data: userRegistrationsRes.data.Members.map(m => m.count),
-              borderColor: 'rgba(54, 162, 235, 1)',
-              backgroundColor: 'rgba(54, 162, 235, 0.2)',
-              tension: 0.4,
-              fill: true,
-            },
-            {
-              label: 'New Staff',
-              data: userRegistrationsRes.data.Staff.map(s => s.count),
-              borderColor: 'rgba(255, 99, 132, 1)',
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              tension: 0.4,
-              fill: true,
-            }
-          ]
-        };
-
-        // Log processed user registration data
-        console.log('Processed User Registration Data:', userRegistrationData);
-
-        setChartData({
-          genres: genreData,
-          orderStatus: orderStatusData,
-          monthlySales: monthlySalesData,
-          userRegistrations: userRegistrationData
-        });
+        // New Members Over Time (Line Chart)
+        const newMembersArr = (newMembersRes.data || []).map(m => ({
+          date: `${m.year}-${String(m.month).padStart(2, '0')}`,
+          members: m.count
+        }));
+        setNewMembersData(newMembersArr);
 
         setError('');
-    } catch (err) {
+      } catch (err) {
         setError('Failed to load dashboard data');
         console.error('Error loading dashboard data:', err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchAllData();
   }, [token]);
+
+  const COLORS = ['#6366f1', '#f59e42', '#10b981', '#ef4444', '#fbbf24', '#3b82f6'];
+
+  // DEBUG: Log genreData before rendering
+  console.log('genreData', genreData);
+
+  // TEMP: Test with static data if genreData is empty
+  const testGenreData = [
+    { genre: "Fiction", value: 2 },
+    { genre: "Mystery", value: 3 }
+  ];
+  const chartData = genreData.length > 0 ? genreData : testGenreData;
 
   if (loading) {
     return (
@@ -230,106 +198,74 @@ const AdminPanel = () => {
             Admin Dashboard
           </h1>
           <p className="text-gray-600 text-lg">Welcome to your bookstore management dashboard</p>
-            </div>
-
-            {error && (
-          <div className="mb-8 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg text-red-700 font-medium shadow-sm animate-fade-in">
-                {error}
-              </div>
-            )}
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="bg-blue-50 p-3 rounded-full mb-4">
-              <Users className="w-8 h-8 text-blue-600" />
-            </div>
-            <div className="text-3xl font-bold text-gray-900 mb-1">{stats.totalStaff}</div>
-            <div className="text-gray-500 font-medium">Total Staff</div>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="bg-indigo-50 p-3 rounded-full mb-4">
-              <User className="w-8 h-8 text-indigo-600" />
-            </div>
-            <div className="text-3xl font-bold text-gray-900 mb-1">{stats.totalMembers}</div>
-            <div className="text-gray-500 font-medium">Total Members</div>
-                  </div>
-
-          <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="bg-green-50 p-3 rounded-full mb-4">
-              <BookOpen className="w-8 h-8 text-green-600" />
-                      </div>
-            <div className="text-3xl font-bold text-gray-900 mb-1">{stats.totalBooks}</div>
-            <div className="text-gray-500 font-medium">Total Books</div>
-                  </div>
-
-          <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center justify-center border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="bg-purple-50 p-3 rounded-full mb-4">
-              <Package className="w-8 h-8 text-purple-600" />
-            </div>
-            <div className="text-3xl font-bold text-gray-900 mb-1">{stats.totalOrders}</div>
-            <div className="text-gray-500 font-medium">Total Orders</div>
         </div>
-      </div>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Book Genres Distribution */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">Book Genres Distribution</h2>
-              <div className="bg-indigo-50 p-2 rounded-lg">
-                <BookOpen className="w-5 h-5 text-indigo-600" />
-                      </div>
-                    </div>
-            <div className="h-80">
-              {chartData.genres && <Pie data={chartData.genres} options={chartOptions} />}
-            </div>
+        {error && (
+          <div className="mb-8 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg text-red-700 font-medium shadow-sm animate-fade-in">
+            {error}
           </div>
+        )}
 
-          {/* Order Status Distribution */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">Order Status Distribution</h2>
-              <div className="bg-green-50 p-2 rounded-lg">
-                <Package className="w-5 h-5 text-green-600" />
-                      </div>
-                    </div>
-            <div className="h-80">
-              {chartData.orderStatus && <Doughnut data={chartData.orderStatus} options={chartOptions} />}
-            </div>
-          </div>
+        {/* Metrics Widgets */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+          <Widget title="Total Books" value={metrics.totalBooks} icon="📚" />
+          <Widget title="Total Orders" value={metrics.totalOrders} icon="🛒" />
+          <Widget title="Fulfilled Orders" value={metrics.fulfilledOrders} icon="✅" />
+          <Widget title="Cancelled Orders" value={metrics.cancelledOrders} icon="❌" />
+          <Widget title="Total Sales" value={`$${metrics.totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} icon="💰" />
+          <Widget title="Out of Stock" value={metrics.outOfStock} icon="❗" />
+          <Widget title="Books On Sale" value={metrics.onSale} icon="🏷️" />
+        </div>
 
-          {/* Monthly Sales */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300 lg:col-span-2">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">Monthly Sales</h2>
-              <div className="bg-blue-50 p-2 rounded-lg">
-                <TrendingUp className="w-5 h-5 text-blue-600" />
-                                </div>
-                              </div>
-            <div className="h-80">
-              {chartData.monthlySales && <Bar data={chartData.monthlySales} options={chartOptions} />}
-            </div>
-          </div>
-
-          {/* User Registration Trends */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300 lg:col-span-2">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">User Registration Trends</h2>
-              <div className="bg-purple-50 p-2 rounded-lg">
-                <Users className="w-5 h-5 text-purple-600" />
-                      </div>
-                    </div>
-            <div className="h-80">
-              {chartData.userRegistrations && <Line data={chartData.userRegistrations} options={lineChartOptions} />}
-            </div>
-          </div>
+        {/* Only Books by Genre Pie Chart */}
+        <div className="bg-white rounded-lg shadow p-4 max-w-xl mx-auto">
+          <h3 className="font-semibold mb-2">Books by Genre</h3>
+          {genreData.length === 0 ? (
+            <div className="text-gray-400 text-center py-8">No data available</div>
+          ) : (
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={chartData}
+                  dataKey="value"
+                  nameKey="genre"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  label={({ genre, value }) => {
+                    const total = chartData.reduce((sum, g) => sum + g.value, 0);
+                    const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                    return `${genre} (${percent}%)`;
+                  }}
+                >
+                  {chartData.map((entry, idx) => (
+                    <Cell key={`cell-genre-${idx}`} fill={COLORS[idx % COLORS.length]} />
+                  ))}
+                </Pie>
+                <RechartsTooltip
+                  formatter={(value, name, props) => {
+                    const total = chartData.reduce((sum, g) => sum + g.value, 0);
+                    const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                    return [`${value} books (${percent}%)`, 'Count'];
+                  }}
+                />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </div>
     </div>
   );
 };
+
+// Simple widget component
+const Widget = ({ title, value, icon }) => (
+  <div className="bg-white rounded-lg shadow p-4 flex flex-col items-center justify-center">
+    <span className="text-3xl mb-2">{icon}</span>
+    <span className="text-2xl font-bold">{value}</span>
+    <span className="text-gray-600 text-sm mt-1">{title}</span>
+  </div>
+);
 
 export default AdminPanel;

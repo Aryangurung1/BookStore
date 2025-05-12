@@ -130,7 +130,7 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
               value={form.author} 
               onChange={handleChange} 
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
-              required
+              required 
             >
               <option value="">Select an author</option>
               <option value="J.K. Rowling">J.K. Rowling</option>
@@ -153,7 +153,7 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
               value={form.genre} 
               onChange={handleChange} 
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
-              required
+              required 
             >
               <option value="">Select a genre</option>
               <option value="Fiction">Fiction</option>
@@ -171,7 +171,7 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
               value={form.language} 
               onChange={handleChange} 
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
-              required
+              required 
             >
               <option value="">Select a language</option>
               <option value="English">English</option>
@@ -201,7 +201,7 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
               value={form.publisher} 
               onChange={handleChange} 
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
-              required
+              required 
             >
               <option value="">Select a publisher</option>
               <option value="Penguin Random House">Penguin Random House</option>
@@ -237,7 +237,7 @@ const BookForm = ({ onSubmit, initialData = {}, isEdit = false, onCancel }) => {
               value={form.format} 
               onChange={handleChange} 
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors" 
-              required
+              required 
             >
               <option value="">Select a format</option>
               <option value="Hardcover">Hardcover</option>

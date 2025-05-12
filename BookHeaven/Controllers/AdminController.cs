@@ -172,7 +172,8 @@ namespace BookHeaven.Controllers
         public async Task<IActionResult> GetGenreDistribution()
         {
             var genres = await _context.Books
-                .GroupBy(b => b.Genre)
+                .Where(b => !string.IsNullOrWhiteSpace(b.Genre))
+                .GroupBy(b => b.Genre.Trim().ToLower())
                 .Select(g => new { Genre = g.Key, Count = g.Count() })
                 .ToListAsync();
 
@@ -239,6 +240,64 @@ namespace BookHeaven.Controllers
                 .ToListAsync();
 
             return Ok(new { Members = memberRegistrations, Staff = staffRegistrations });
+        }
+
+        // --- DASHBOARD: Order Summary ---
+        [HttpGet("dashboard/order-summary")]
+        public async Task<IActionResult> GetOrderSummary()
+        {
+            var totalOrders = await _context.Orders.CountAsync();
+            var fulfilledOrders = await _context.Orders.CountAsync(o => o.Status == "Fulfilled" && !o.IsCancelled);
+            var cancelledOrders = await _context.Orders.CountAsync(o => o.Status == "Cancelled" || o.IsCancelled);
+            return Ok(new { totalOrders, fulfilledOrders, cancelledOrders });
+        }
+
+        // --- DASHBOARD: Top 5 Bestselling Books ---
+        [HttpGet("dashboard/top-bestsellers")]
+        public async Task<IActionResult> GetTopBestsellers()
+        {
+            var topBooks = await _context.OrderItems
+                .Where(oi => oi.Order.Status == "Fulfilled" && !oi.Order.IsCancelled)
+                .GroupBy(oi => new { oi.BookId, oi.Book.Title, oi.Book.Author })
+                .Select(g => new {
+                    g.Key.BookId,
+                    g.Key.Title,
+                    g.Key.Author,
+                    QuantitySold = g.Sum(oi => oi.Quantity)
+                })
+                .OrderByDescending(x => x.QuantitySold)
+                .Take(5)
+                .ToListAsync();
+            return Ok(topBooks);
+        }
+
+        // --- DASHBOARD: New Members Over Time (last 6 months) ---
+        [HttpGet("dashboard/new-members")]
+        public async Task<IActionResult> GetNewMembersOverTime()
+        {
+            var sixMonthsAgo = DateTime.UtcNow.AddMonths(-5);
+            var newMembers = await _context.Members
+                .Where(m => m.JoinDate >= sixMonthsAgo)
+                .GroupBy(m => new { m.JoinDate.Year, m.JoinDate.Month })
+                .Select(g => new {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    Count = g.Count()
+                })
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
+                .ToListAsync();
+            return Ok(newMembers);
+        }
+
+        // --- DASHBOARD: Total Sales ---
+        [HttpGet("dashboard/total-sales")]
+        public async Task<IActionResult> GetTotalSales()
+        {
+            var totalSales = await _context.Orders
+                .Where(o => o.Status == "Fulfilled" && !o.IsCancelled)
+                .SumAsync(o => o.TotalPrice);
+            return Ok(new { totalSales });
         }
     }
 }
