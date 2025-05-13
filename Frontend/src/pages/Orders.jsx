@@ -193,21 +193,8 @@ const Orders = () => {
                         {order.items.map((item, index) => (
                           <div key={index} className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="h-12 w-9 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
-                                {item.imageUrl ? (
-                                  <img
-                                    src={`http://localhost:5176${item.imageUrl}`}
-                                    alt={item.title}
-                                    className="object-contain h-full w-full"
-                                    onError={e => { e.target.onerror = null; e.target.src = placeholderImg; }}
-                                  />
-                                ) : (
-                                  <img
-                                    src={placeholderImg}
-                                    alt="Book placeholder"
-                                    className="object-contain h-full w-full"
-                                  />
-                                )}
+                              <div className="h-12 w-9 bg-indigo-50 rounded flex items-center justify-center">
+                                <BookOpen className="h-6 w-6 text-indigo-600" />
                               </div>
                               <div>
                                 <Link 
@@ -216,7 +203,10 @@ const Orders = () => {
                                 >
                                   {item.title}
                                 </Link>
-                                <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+                                <div className="text-sm text-gray-500 space-y-1">
+                                  <p>Quantity: {item.quantity}</p>
+                                  <p>Unit Price: ${((item.unitPrice !== undefined && item.unitPrice !== null) ? item.unitPrice : item.price).toFixed(2)}</p>
+                                </div>
                               </div>
                             </div>
                             <span className="font-medium text-gray-900">

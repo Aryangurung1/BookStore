@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useBookmark } from '../context/BookmarkContext';
@@ -40,25 +40,31 @@ const Navbar = () => {
           {(!user || user.role === 'Member') && (
             <div className="hidden md:flex items-center justify-center flex-1">
               <div className="flex items-center space-x-8">
-                <Link 
-                  to="/books" 
-                  className="text-gray-700 hover:text-indigo-600 transition-colors text-sm font-medium"
+                <NavLink
+                  to="/books"
+                  className={({ isActive }) =>
+                    `text-sm font-medium transition-colors ${isActive ? 'text-indigo-600 font-bold' : 'text-gray-700 hover:text-indigo-600'}`
+                  }
                 >
                   Browse Books
-                </Link>
-                <Link 
-                  to="/announcements" 
-                  className="text-gray-700 hover:text-indigo-600 transition-colors text-sm font-medium"
+                </NavLink>
+                <NavLink
+                  to="/announcements"
+                  className={({ isActive }) =>
+                    `text-sm font-medium transition-colors ${isActive ? 'text-indigo-600 font-bold' : 'text-gray-700 hover:text-indigo-600'}`
+                  }
                 >
                   Announcements
-                </Link>
+                </NavLink>
                 {user?.role === 'Member' && (
-                  <Link 
-                    to="/orders" 
-                    className="text-gray-700 hover:text-indigo-600 transition-colors text-sm font-medium"
+                  <NavLink
+                    to="/orders"
+                    className={({ isActive }) =>
+                      `text-sm font-medium transition-colors ${isActive ? 'text-indigo-600 font-bold' : 'text-gray-700 hover:text-indigo-600'}`
+                    }
                   >
                     Orders
-                  </Link>
+                  </NavLink>
                 )}
               </div>
             </div>
