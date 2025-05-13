@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { Dialog, Transition } from '@headlessui/react';
 import { Plus, Trash2, X, Megaphone } from 'lucide-react';
 
@@ -15,9 +16,9 @@ const Tooltip = ({ children, text }) => (
 
 const AdminAnnouncementManagement = () => {
   const { token } = useAuth();
+  const { addToast } = useToast();
   const [announcements, setAnnouncements] = useState([]);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -39,7 +40,6 @@ const AdminAnnouncementManagement = () => {
   const fetchAnnouncements = async () => {
     setLoading(true);
     setError('');
-    setSuccess('');
     try {
       const res = await axios.get('http://localhost:5176/api/Announcement/active');
       setAnnouncements(res.data);
@@ -73,7 +73,7 @@ const AdminAnnouncementManagement = () => {
         payload,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setSuccess('Announcement added successfully');
+      addToast('Announcement added successfully', 'success');
       fetchAnnouncements();
       setShowAddModal(false);
       setFormData({
@@ -94,7 +94,7 @@ const AdminAnnouncementManagement = () => {
       await axios.delete(`http://localhost:5176/api/Announcement/${deleteId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setSuccess('Announcement deleted successfully');
+      addToast('Announcement deleted successfully', 'success');
       fetchAnnouncements();
       setShowDeleteModal(false);
       setDeleteId(null);
@@ -143,21 +143,6 @@ const AdminAnnouncementManagement = () => {
                 </div>
                 <div className="ml-3">
                   <p className="text-sm text-red-700 font-medium">{error}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {success && (
-            <div className="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg animate-pulse">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm text-green-700 font-medium">{success}</p>
                 </div>
               </div>
             </div>

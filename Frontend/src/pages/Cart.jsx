@@ -1,5 +1,5 @@
 // ✅ FILE: src/pages/Cart.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -7,6 +7,7 @@ import { useToast } from '../context/ToastContext';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Trash2, Plus, Minus, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Dialog, Transition } from '@headlessui/react';
 
 const placeholderImg = '/placeholder-book.jpg';
 
@@ -20,6 +21,9 @@ const Cart = () => {
   const [orderInfo, setOrderInfo] = useState(null);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [fulfilledOrders, setFulfilledOrders] = useState(0);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteItemId, setDeleteItemId] = useState(null);
+  const [showClearCartModal, setShowClearCartModal] = useState(false);
 
   useEffect(() => {
     fetchCart();
@@ -72,13 +76,20 @@ const Cart = () => {
   };
 
   const handleRemoveItem = async (bookId) => {
+    setDeleteItemId(bookId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmRemoveItem = async () => {
     try {
-      await axios.delete(`http://localhost:5176/api/Cart/${bookId}`, {
+      await axios.delete(`http://localhost:5176/api/Cart/${deleteItemId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       addToast('Item removed from cart', 'success');
       fetchCart();
       updateCartCount();
+      setShowDeleteModal(false);
+      setDeleteItemId(null);
     } catch (err) {
       console.error('Failed to remove item:', err);
       addToast('Failed to remove item from cart', 'error');
@@ -86,6 +97,10 @@ const Cart = () => {
   };
 
   const handleClearCart = async () => {
+    setShowClearCartModal(true);
+  };
+
+  const confirmClearCart = async () => {
     try {
       await axios.delete('http://localhost:5176/api/Cart/clear', {
         headers: { Authorization: `Bearer ${token}` }
@@ -93,6 +108,7 @@ const Cart = () => {
       addToast('Cart cleared successfully', 'success');
       fetchCart();
       updateCartCount();
+      setShowClearCartModal(false);
     } catch (err) {
       console.error('Failed to clear cart:', err);
       addToast('Failed to clear cart', 'error');
@@ -382,6 +398,142 @@ const Cart = () => {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Transition.Root show={showDeleteModal} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={() => setShowDeleteModal(false)}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 z-50 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="relative transform overflow-hidden rounded-2xl bg-white p-8 text-left shadow-2xl border max-w-md w-full">
+                  <div className="sm:flex sm:items-start">
+                    <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                      <Trash2 className="h-6 w-6 text-red-600" aria-hidden="true" />
+                    </div>
+                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                      <Dialog.Title as="h3" className="text-lg font-bold leading-6 text-gray-900">
+                        Remove Item
+                      </Dialog.Title>
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-500">
+                          Are you sure you want to remove this item from your cart?
+                        </p>
+                        {cart.find(item => item.bookId === deleteItemId) && (
+                          <div className="mt-3 bg-gray-50 rounded p-3 text-gray-700 text-sm">
+                            <strong>Title:</strong> {cart.find(item => item.bookId === deleteItemId).bookTitle}
+                            <br />
+                            <strong>Author:</strong> {cart.find(item => item.bookId === deleteItemId).author}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                    <button
+                      type="button"
+                      className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                      onClick={confirmRemoveItem}
+                    >
+                      Remove
+                    </button>
+                    <button
+                      type="button"
+                      className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+                      onClick={() => setShowDeleteModal(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition.Root>
+
+      {/* Clear Cart Confirmation Modal */}
+      <Transition.Root show={showClearCartModal} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={() => setShowClearCartModal(false)}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" />
+          </Transition.Child>
+          <div className="fixed inset-0 z-50 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="relative transform overflow-hidden rounded-2xl bg-white p-8 text-left shadow-2xl border max-w-md w-full">
+                  <div className="sm:flex sm:items-start">
+                    <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                      <Trash2 className="h-6 w-6 text-red-600" aria-hidden="true" />
+                    </div>
+                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                      <Dialog.Title as="h3" className="text-lg font-bold leading-6 text-gray-900">
+                        Clear Cart
+                      </Dialog.Title>
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-500">
+                          Are you sure you want to clear your entire cart? This action cannot be undone.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                    <button
+                      type="button"
+                      className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                      onClick={confirmClearCart}
+                    >
+                      Clear Cart
+                    </button>
+                    <button
+                      type="button"
+                      className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+                      onClick={() => setShowClearCartModal(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition.Root>
     </div>
   );
 };

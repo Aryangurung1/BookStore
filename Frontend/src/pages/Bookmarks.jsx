@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useBookmark } from '../context/BookmarkContext';
 import { useToast } from '../context/ToastContext';
+import { useCart } from '../context/CartContext';
 import { Bookmark, ShoppingCart, Eye, Loader2, AlertCircle, CheckCircle2, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -13,6 +14,7 @@ const Bookmarks = () => {
   const { token, user } = useAuth();
   const { updateBookmarkCount } = useBookmark();
   const { addToast } = useToast();
+  const { updateCartCount } = useCart();
   const navigate = useNavigate();
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -62,6 +64,7 @@ const Bookmarks = () => {
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      await updateCartCount();
       addToast('Book added to cart successfully', 'success');
     } catch (err) {
       console.error('Failed to add to cart:', err);

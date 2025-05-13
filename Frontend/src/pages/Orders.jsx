@@ -11,6 +11,7 @@ const Orders = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const placeholderImg = '/placeholder-book.jpg';
 
   useEffect(() => {
     fetchOrders();
@@ -192,8 +193,21 @@ const Orders = () => {
                         {order.items.map((item, index) => (
                           <div key={index} className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="h-12 w-9 bg-gray-100 rounded flex items-center justify-center">
-                                <BookOpen className="h-6 w-6 text-gray-400" />
+                              <div className="h-12 w-9 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
+                                {item.imageUrl ? (
+                                  <img
+                                    src={`http://localhost:5176${item.imageUrl}`}
+                                    alt={item.title}
+                                    className="object-contain h-full w-full"
+                                    onError={e => { e.target.onerror = null; e.target.src = placeholderImg; }}
+                                  />
+                                ) : (
+                                  <img
+                                    src={placeholderImg}
+                                    alt="Book placeholder"
+                                    className="object-contain h-full w-full"
+                                  />
+                                )}
                               </div>
                               <div>
                                 <Link 

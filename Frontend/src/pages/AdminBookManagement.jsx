@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import BookForm from '../components/BookForm';
 import { Dialog, Transition } from '@headlessui/react';
 import { Plus, Edit, Trash2, Eye, X, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -18,6 +19,7 @@ const Tooltip = ({ children, text }) => (
 
 const AdminBookManagement = () => {
   const { token } = useAuth();
+  const { addToast } = useToast();
   const [books, setBooks] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -57,7 +59,7 @@ const AdminBookManagement = () => {
       await axios.post('http://localhost:5176/api/books', formData, {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
       });
-      setSuccess('Book added successfully');
+      addToast('Book added successfully', 'success');
       fetchBooks();
       setShowAddModal(false);
     } catch (err) {
@@ -71,7 +73,7 @@ const AdminBookManagement = () => {
       await axios.put(`http://localhost:5176/api/books/${selectedBook.bookId}`, formData, {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
       });
-      setSuccess('Book updated successfully');
+      addToast('Book updated successfully', 'success');
       fetchBooks();
       setShowEditModal(false);
       setSelectedBook(null);
@@ -86,7 +88,7 @@ const AdminBookManagement = () => {
       await axios.delete(`http://localhost:5176/api/books/${deleteId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setSuccess('Book deleted successfully');
+      addToast('Book deleted successfully', 'success');
       fetchBooks();
       setShowDeleteModal(false);
       setDeleteId(null);

@@ -368,7 +368,7 @@ const BookDetailPage = () => {
                         key={rating}
                         type="button"
                         onClick={() => setUserReview(prev => ({ ...prev, rating }))}
-                        className={`p-2 rounded-full transition-colors ${userReview.rating === rating ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-400'}`}
+                        className={`p-2 rounded-full transition-colors ${userReview.rating >= rating ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-400'}`}
                       >
                         <Star className="w-6 h-6" fill={userReview.rating >= rating ? 'currentColor' : 'none'} />
                       </button>
@@ -436,7 +436,7 @@ const BookDetailPage = () => {
                                 key={rating}
                                 type="button"
                                 onClick={() => setEditInput(prev => ({ ...prev, rating }))}
-                                className={`p-2 rounded-full transition-colors ${editInput.rating === rating ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-400'}`}
+                                className={`p-2 rounded-full transition-colors ${editInput.rating >= rating ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-400'}`}
                               >
                                 <Star className="w-6 h-6" fill={editInput.rating >= rating ? 'currentColor' : 'none'} />
                               </button>

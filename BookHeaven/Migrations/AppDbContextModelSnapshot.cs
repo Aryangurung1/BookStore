@@ -55,7 +55,7 @@ namespace BookHeaven.Migrations
                             AdminId = 1,
                             Email = "admin@bookheaven.com",
                             FullName = "System Administrator",
-                            PasswordHash = "$2a$11$l3Gl9gpKINvXdj/YvQGkeuQwUnvGGfgyGR7b7czAxEWYt8Ip86R3q"
+                            PasswordHash = "$2a$11$XtwnPa37Wl71s1KZb8rL8etPcmTR8T3m4ErBIpnepjWhAKIIm.eqK"
                         });
                 });
 
