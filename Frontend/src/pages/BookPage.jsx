@@ -77,7 +77,7 @@ const BooksPage = () => {
         setFormats(f.data);
         setPublishers(p.data);
       } catch (err) {
-        // ignore
+        console.error('Error fetching filter options:', err);
       }
     };
     fetchFilters();
@@ -148,21 +148,24 @@ const BooksPage = () => {
       if (newArrivals) params.append('newArrivals', true);
       if (comingSoon) params.append('comingSoon', true);
       if (deals) params.append('deals', true);
+      
+      // Handle multi-select filters
       if (selectedLanguages.length > 0) {
-        selectedLanguages.forEach(lang => params.append('languages[]', lang));
+        selectedLanguages.forEach(lang => params.append('languages[]', lang.value));
       }
       if (selectedAuthors.length > 0) {
-        selectedAuthors.forEach(author => params.append('authors[]', author));
+        selectedAuthors.forEach(author => params.append('authors[]', author.value));
       }
       if (selectedGenres.length > 0) {
-        selectedGenres.forEach(genre => params.append('genres[]', genre));
+        selectedGenres.forEach(genre => params.append('genres[]', genre.value));
       }
       if (selectedFormats.length > 0) {
-        selectedFormats.forEach(format => params.append('formats[]', format));
+        selectedFormats.forEach(format => params.append('formats[]', format.value));
       }
       if (selectedPublishers.length > 0) {
-        selectedPublishers.forEach(publisher => params.append('publishers[]', publisher));
+        selectedPublishers.forEach(publisher => params.append('publishers[]', publisher.value));
       }
+
       const res = await axios.get(`http://localhost:5176/api/books`, {
         headers: { Authorization: `Bearer ${token}` },
         params
@@ -171,8 +174,8 @@ const BooksPage = () => {
       const totalCount = parseInt(res.headers['x-total-count'] || '0');
       setTotalPages(Math.max(1, Math.ceil(totalCount / 9)));
     } catch (err) {
-      console.error('Failed to load books:', err);
-      addToast('Failed to load books. Please try again later.', 'error');
+      setError('Failed to load books');
+      console.error('Error fetching books:', err);
     } finally {
       setLoading(false);
     }
@@ -406,7 +409,7 @@ const BooksPage = () => {
                       isMulti
                       options={authors.map(a => ({ value: a, label: a }))}
                       value={selectedAuthors}
-                      onChange={setSelectedAuthors}
+                      onChange={selected => setSelectedAuthors(selected || [])}
                       placeholder="Select authors..."
                       className="basic-multi-select"
                       classNamePrefix="select"
@@ -418,7 +421,7 @@ const BooksPage = () => {
                       isMulti
                       options={genres.map(g => ({ value: g, label: g }))}
                       value={selectedGenres}
-                      onChange={setSelectedGenres}
+                      onChange={selected => setSelectedGenres(selected || [])}
                       placeholder="Select genres..."
                       className="basic-multi-select"
                       classNamePrefix="select"
@@ -430,7 +433,7 @@ const BooksPage = () => {
                       isMulti
                       options={languages.map(l => ({ value: l, label: l }))}
                       value={selectedLanguages}
-                      onChange={setSelectedLanguages}
+                      onChange={selected => setSelectedLanguages(selected || [])}
                       placeholder="Select languages..."
                       className="basic-multi-select"
                       classNamePrefix="select"
@@ -442,7 +445,7 @@ const BooksPage = () => {
                       isMulti
                       options={formats.map(f => ({ value: f, label: f }))}
                       value={selectedFormats}
-                      onChange={setSelectedFormats}
+                      onChange={selected => setSelectedFormats(selected || [])}
                       placeholder="Select formats..."
                       className="basic-multi-select"
                       classNamePrefix="select"
@@ -454,7 +457,7 @@ const BooksPage = () => {
                       isMulti
                       options={publishers.map(p => ({ value: p, label: p }))}
                       value={selectedPublishers}
-                      onChange={setSelectedPublishers}
+                      onChange={selected => setSelectedPublishers(selected || [])}
                       placeholder="Select publishers..."
                       className="basic-multi-select"
                       classNamePrefix="select"

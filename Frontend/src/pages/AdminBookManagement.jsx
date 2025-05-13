@@ -3,7 +3,10 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import BookForm from '../components/BookForm';
 import { Dialog, Transition } from '@headlessui/react';
-import { Plus, Edit, Trash2, Eye, X, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, X, BookOpen, ChevronLeft, ChevronRight, Search, Filter } from 'lucide-react';
+import Select from 'react-select';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 const placeholderImg = '/placeholder-book.jpg';
 
@@ -29,21 +32,140 @@ const AdminBookManagement = () => {
   const [selectedBook, setSelectedBook] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const booksPerPage = 9;
+
+  // Filter states
+  const [query, setQuery] = useState('');
+  const [authors, setAuthors] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [languages, setLanguages] = useState([]);
+  const [formats, setFormats] = useState([]);
+  const [publishers, setPublishers] = useState([]);
+  // Multi-select state
+  const [selectedAuthors, setSelectedAuthors] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [selectedLanguages, setSelectedLanguages] = useState([]);
+  const [selectedFormats, setSelectedFormats] = useState([]);
+  const [selectedPublishers, setSelectedPublishers] = useState([]);
+  // Range state
+  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [ratingRange, setRatingRange] = useState([0, 5]);
+  const [inStock, setInStock] = useState(false);
+  const [inLibrary, setInLibrary] = useState(false);
+  const [sortBy, setSortBy] = useState('title');
+  const [sortDescending, setSortDescending] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [isAwardWinner, setIsAwardWinner] = useState(false);
+  const [isBestseller, setIsBestseller] = useState(false);
+  const [newReleases, setNewReleases] = useState(false);
+  const [newArrivals, setNewArrivals] = useState(false);
+  const [comingSoon, setComingSoon] = useState(false);
+  const [deals, setDeals] = useState(false);
+  const [resetFilters, setResetFilters] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
+
+  // Fetch filter options on mount
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const [a, g, l, f, p] = await Promise.all([
+          axios.get('http://localhost:5176/api/books/authors'),
+          axios.get('http://localhost:5176/api/books/genres'),
+          axios.get('http://localhost:5176/api/books/languages'),
+          axios.get('http://localhost:5176/api/books/formats'),
+          axios.get('http://localhost:5176/api/books/publishers'),
+        ]);
+        setAuthors(a.data);
+        setGenres(g.data);
+        setLanguages(l.data);
+        setFormats(f.data);
+        setPublishers(p.data);
+      } catch (err) {
+        // ignore
+      }
+    };
+    fetchFilters();
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset to first page on search or filter
+  }, [query, selectedAuthors, selectedGenres, selectedLanguages, selectedFormats, selectedPublishers, priceRange, ratingRange, inStock, inLibrary, sortBy, sortDescending]);
 
   useEffect(() => {
     fetchBooks();
-  }, []);
+  }, [query, currentPage, selectedAuthors, selectedGenres, selectedLanguages, selectedFormats, selectedPublishers, priceRange, ratingRange, inStock, inLibrary, sortBy, sortDescending, isAwardWinner, isBestseller, newReleases, newArrivals, comingSoon, deals]);
+
+  useEffect(() => {
+    if (resetFilters) {
+      setQuery('');
+      setPriceRange([0, 1000]);
+      setRatingRange([0, 5]);
+      setSelectedLanguages([]);
+      setSelectedAuthors([]);
+      setSelectedGenres([]);
+      setSelectedFormats([]);
+      setSelectedPublishers([]);
+      setSortBy('title');
+      setSortDescending(false);
+      setCurrentPage(1);
+      setIsAwardWinner(false);
+      setIsBestseller(false);
+      setNewReleases(false);
+      setNewArrivals(false);
+      setComingSoon(false);
+      setDeals(false);
+      setResetFilters(false);
+      fetchBooks();
+    }
+  }, [resetFilters]);
 
   const fetchBooks = async () => {
     setLoading(true);
     setError('');
     setSuccess('');
     try {
+      const params = new URLSearchParams();
+      params.append('search', query);
+      params.append('minPrice', priceRange[0]);
+      params.append('maxPrice', priceRange[1]);
+      params.append('minRating', ratingRange[0]);
+      params.append('sortBy', sortBy);
+      params.append('sortDescending', sortDescending);
+      params.append('page', currentPage);
+      params.append('pageSize', booksPerPage);
+      if (inStock) params.append('inStock', true);
+      if (inLibrary) params.append('isAvailableInLibrary', true);
+      if (isAwardWinner) params.append('isAwardWinner', true);
+      if (isBestseller) params.append('isBestseller', true);
+      if (newReleases) params.append('newReleases', true);
+      if (newArrivals) params.append('newArrivals', true);
+      if (comingSoon) params.append('comingSoon', true);
+      if (deals) params.append('deals', true);
+      if (selectedLanguages.length > 0) {
+        selectedLanguages.forEach(lang => params.append('languages[]', lang));
+      }
+      if (selectedAuthors.length > 0) {
+        selectedAuthors.forEach(author => params.append('authors[]', author));
+      }
+      if (selectedGenres.length > 0) {
+        selectedGenres.forEach(genre => params.append('genres[]', genre));
+      }
+      if (selectedFormats.length > 0) {
+        selectedFormats.forEach(format => params.append('formats[]', format));
+      }
+      if (selectedPublishers.length > 0) {
+        selectedPublishers.forEach(publisher => params.append('publishers[]', publisher));
+      }
+
       const res = await axios.get('http://localhost:5176/api/books', {
         headers: { Authorization: `Bearer ${token}` },
+        params
       });
       setBooks(res.data);
+      const totalCountHeader = parseInt(res.headers['x-total-count'] || '0');
+      setTotalCount(totalCountHeader);
+      setTotalPages(Math.max(1, Math.ceil(totalCountHeader / booksPerPage)));
     } catch (err) {
       setError('Failed to fetch books');
       console.error('Error fetching books:', err);
@@ -97,16 +219,21 @@ const AdminBookManagement = () => {
   };
 
   // Calculate pagination
-  const indexOfLastBook = currentPage * booksPerPage;
-  const indexOfFirstBook = indexOfLastBook - booksPerPage;
-  const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
-  const totalPages = Math.ceil(books.length / booksPerPage);
+  const currentBooks = books;
+  const realTotal = totalCount && totalCount > 0 ? totalCount : books.length;
+  const pageCount = Math.max(1, Math.ceil(realTotal / booksPerPage));
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
   const isValidDate = (d) => d && !isNaN(new Date(d).getTime());
+
+  useEffect(() => {
+    if (books.length === 0 && currentPage !== 1) {
+      setCurrentPage(1);
+    }
+  }, [books, currentPage]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 py-10">
@@ -149,15 +276,116 @@ const AdminBookManagement = () => {
             </div>
           )}
 
-          <div className="flex justify-end mb-6">
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-4 py-2 rounded-lg hover:from-indigo-700 hover:to-indigo-600 flex items-center gap-2 shadow-md transition-all duration-200 hover:shadow-lg"
-            >
-              <Plus className="h-5 w-5" />
-              Add New Book
-            </button>
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex-1 max-w-md">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search books..."
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <Filter className="h-5 w-5 text-gray-500 mr-2" />
+                Filters
+              </button>
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-4 py-2 rounded-lg hover:from-indigo-700 hover:to-indigo-600 flex items-center gap-2 shadow-md transition-all duration-200 hover:shadow-lg"
+              >
+                <Plus className="h-5 w-5" />
+                Add New Book
+              </button>
+            </div>
           </div>
+
+          {showFilters && (
+            <div className="mb-6 p-3 bg-white rounded-lg border border-gray-200 shadow-sm relative">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1">Authors</label>
+                  <Select isMulti options={authors.map(a => ({ value: a, label: a }))} value={selectedAuthors.map(a => ({ value: a, label: a }))} onChange={selected => setSelectedAuthors(selected.map(s => s.value))} classNamePrefix="select" />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1">Genres</label>
+                  <Select isMulti options={genres.map(g => ({ value: g, label: g }))} value={selectedGenres.map(g => ({ value: g, label: g }))} onChange={selected => setSelectedGenres(selected.map(s => s.value))} classNamePrefix="select" />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1">Languages</label>
+                  <Select isMulti options={languages.map(l => ({ value: l, label: l }))} value={selectedLanguages.map(l => ({ value: l, label: l }))} onChange={selected => setSelectedLanguages(selected.map(s => s.value))} classNamePrefix="select" />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1">Formats</label>
+                  <Select isMulti options={formats.map(f => ({ value: f, label: f }))} value={selectedFormats.map(f => ({ value: f, label: f }))} onChange={selected => setSelectedFormats(selected.map(s => s.value))} classNamePrefix="select" />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1">Publishers</label>
+                  <Select isMulti options={publishers.map(p => ({ value: p, label: p }))} value={selectedPublishers.map(p => ({ value: p, label: p }))} onChange={selected => setSelectedPublishers(selected.map(s => s.value))} classNamePrefix="select" />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1">Price Range</label>
+                  <Slider range min={0} max={1000} value={priceRange} onChange={setPriceRange} marks={{0: '$0', 250: '$250', 500: '$500', 750: '$750', 1000: '$1000'}} />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1">Rating Range</label>
+                  <Slider range min={0} max={5} step={0.5} value={ratingRange} onChange={setRatingRange} marks={{0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5'}} />
+                </div>
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-xs font-semibold text-gray-600 mb-1">Sort By</label>
+                  <div className="flex gap-2 items-center">
+                    <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="block w-full pl-3 pr-10 py-2 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
+                      <option value="title">Title</option>
+                      <option value="price">Price</option>
+                      <option value="date">Publication Date</option>
+                      <option value="popularity">Popularity</option>
+                    </select>
+                    <label className="flex items-center text-xs font-medium">
+                      <input type="checkbox" checked={sortDescending} onChange={e => setSortDescending(e.target.checked)} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+                      <span className="ml-1">Desc</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div className="border-t my-3" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-center text-xs font-medium">
+                <div className="flex flex-wrap gap-x-4 gap-y-2">
+                  <label className="flex items-center"><input type="checkbox" checked={inStock} onChange={e => setInStock(e.target.checked)} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" /><span className="ml-2">In Stock</span></label>
+                  <label className="flex items-center"><input type="checkbox" checked={inLibrary} onChange={e => setInLibrary(e.target.checked)} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" /><span className="ml-2">Available in Library</span></label>
+                  <label className="flex items-center"><input type="checkbox" checked={isAwardWinner} onChange={e => setIsAwardWinner(e.target.checked)} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" /><span className="ml-2">Award Winners</span></label>
+                  <label className="flex items-center"><input type="checkbox" checked={isBestseller} onChange={e => setIsBestseller(e.target.checked)} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" /><span className="ml-2">Bestsellers</span></label>
+                </div>
+                <div className="flex flex-wrap gap-x-4 gap-y-2 md:justify-end items-center w-full">
+                  <label className="flex items-center"><input type="checkbox" checked={newReleases} onChange={e => setNewReleases(e.target.checked)} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" /><span className="ml-2">New Releases</span></label>
+                  <label className="flex items-center"><input type="checkbox" checked={newArrivals} onChange={e => setNewArrivals(e.target.checked)} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" /><span className="ml-2">New Arrivals</span></label>
+                  <label className="flex items-center"><input type="checkbox" checked={comingSoon} onChange={e => setComingSoon(e.target.checked)} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" /><span className="ml-2">Coming Soon</span></label>
+                  <label className="flex items-center"><input type="checkbox" checked={deals} onChange={e => setDeals(e.target.checked)} className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" /><span className="ml-2">Deals</span></label>
+                  <div className="flex-1" />
+                  <button
+                    onClick={() => { setResetFilters(true); setShowFilters(false); }}
+                    className="ml-auto px-4 py-2 text-xs font-semibold text-white bg-indigo-600 border border-indigo-600 rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
+                    style={{ minWidth: 110 }}
+                  >
+                    Reset Filters
+                  </button>
+                  <button
+                    onClick={() => { fetchBooks(); setShowFilters(false); }}
+                    className="ml-2 px-4 py-2 text-xs font-semibold text-indigo-600 bg-white border border-indigo-600 rounded hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
+                    style={{ minWidth: 110 }}
+                  >
+                    Apply Filter
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {loading ? (
             <div className="flex items-center justify-center py-8">
@@ -242,47 +470,39 @@ const AdminBookManagement = () => {
               </div>
 
               {/* Pagination Controls */}
-              {totalPages > 1 && (
-                <div className="mt-8 flex items-center justify-center space-x-2">
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className={`p-2 rounded-lg ${
-                      currentPage === 1
-                        ? 'text-gray-400 cursor-not-allowed'
-                        : 'text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </button>
-
-                  {[...Array(totalPages)].map((_, index) => (
+              <div className="mt-8 flex items-center justify-center space-x-2">
+                {books.length === 0 ? (
+                  <button className="px-4 py-2 rounded-lg bg-gray-200 text-gray-400 cursor-not-allowed" disabled>1</button>
+                ) : pageCount === 1 ? (
+                  <button className="px-4 py-2 rounded-lg bg-indigo-600 text-white">1</button>
+                ) : (
+                  <>
                     <button
-                      key={index + 1}
-                      onClick={() => handlePageChange(index + 1)}
-                      className={`px-4 py-2 rounded-lg ${
-                        currentPage === index + 1
-                          ? 'bg-indigo-600 text-white'
-                          : 'text-gray-600 hover:bg-gray-100'
-                      }`}
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className={`p-2 rounded-lg ${currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100'}`}
                     >
-                      {index + 1}
+                      <ChevronLeft className="h-5 w-5" />
                     </button>
-                  ))}
-
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className={`p-2 rounded-lg ${
-                      currentPage === totalPages
-                        ? 'text-gray-400 cursor-not-allowed'
-                        : 'text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </button>
-                </div>
-              )}
+                    {[...Array(pageCount)].map((_, index) => (
+                      <button
+                        key={index + 1}
+                        onClick={() => handlePageChange(index + 1)}
+                        className={`px-4 py-2 rounded-lg ${currentPage === index + 1 ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                      >
+                        {index + 1}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === pageCount}
+                      className={`p-2 rounded-lg ${currentPage === pageCount ? 'text-gray-400 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-100'}`}
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </button>
+                  </>
+                )}
+              </div>
             </>
           )}
 

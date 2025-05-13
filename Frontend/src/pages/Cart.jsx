@@ -119,6 +119,7 @@ const Cart = () => {
       setOrderInfo(res.data);
       addToast('Order placed successfully! A bill and claim code have been sent to your email.', 'success');
       setCart([]);
+      updateCartCount();
     } catch (err) {
       console.error('Failed to place order:', err);
       addToast(err.response?.data?.message || 'Failed to place order', 'error');

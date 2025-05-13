@@ -80,15 +80,15 @@ const Orders = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header Section */}
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      {/* Sticky Header Section */}
+      <div className="sticky top-16 z-20 bg-gray-50 border-b border-gray-200 shadow-sm">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="py-6"
         >
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 px-4 sm:px-6 lg:px-8">
             <div>
               <h2 className="text-3xl font-bold text-gray-900">My Orders</h2>
               <p className="mt-1 text-gray-600">Track and manage your book orders</p>
@@ -110,7 +110,10 @@ const Orders = () => {
             </div>
           </div>
         </motion.div>
+      </div>
 
+      {/* Scrollable Orders List */}
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Error Message */}
         <AnimatePresence>
           {error && (
